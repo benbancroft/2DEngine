@@ -4,13 +4,13 @@
 #include <emscripten/emscripten.h>
 #include "game.h"
 
-int init_gl(void);
+int init_gl();
 void do_frame();
 void shutdown_gl();
 
-int main(void) 
+int main()
 {
-	if (init_gl() == GL_TRUE) {		
+	if (init_gl() == GL_TRUE) {
 		on_surface_created();
 		on_surface_changed();
 		emscripten_set_main_loop(do_frame, 0, 1);
