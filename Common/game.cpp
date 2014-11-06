@@ -1,13 +1,27 @@
+#include <iostream>
+#include <map>
+
 #include "game.h"
+#include "asset.h"
 #include "asset_utils.h"
-#include "buffer.h"
-#include "image.h"
+#include "texture.h"
 #include "platform/platform_gl.h"
+
 #include "platform/platform_asset_utils.h"
 #include "shader.h"
-#include "texture.h"
 
-static GLuint texture;
+#include "buffer.h"
+
+/*#include "asset_utils.h"
+#include "buffer.h"
+#include "image.h"
+#include "platform_asset_utils.h"
+#include "shader.h"
+#include "texture.h"*/
+
+static std::map <std::string, Assets::Asset> assetList;
+
+static Assets::Texture* texture;
 static GLuint buffer;
 static GLuint program;
 
@@ -26,9 +40,11 @@ void on_surface_created() {
 }
 
 void on_surface_changed() {
-    texture = load_png_asset_into_texture("textures/air_hockey_surface.png");
+    Assets::load_asset("textures/air_hockey_surface", Assets::TEXTURE);
+    texture = Assets::get_texture("textures/air_hockey_surface");
+    //texture = load_png_asset_into_texture("textures/air_hockey_surface.png");
     buffer = create_vbo(sizeof(rect), rect, GL_STATIC_DRAW);
-    program = build_program_from_assets("shaders/shader.vsh", "shaders/shader.fsh");
+    program = Assets::build_program_from_assets("shaders/shader.vsh", "shaders/shader.fsh");
 
     a_position_location = glGetAttribLocation(program, "a_Position");
     a_texture_coordinates_location = glGetAttribLocation(program, "a_TextureCoordinates");
@@ -41,7 +57,7 @@ void on_draw_frame() {
     glUseProgram(program);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, texture->getTexture());
     glUniform1i(u_texture_unit_location, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, buffer);

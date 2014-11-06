@@ -11,29 +11,31 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 HEADERS += \
+    platform/platform_asset_utils.h \
+    platform/platform_file_utils.h \
+    platform/platform_gl.h \
+    platform/platform_log.h \
+    platform/platform_macros.h \
+    asset.h \
     asset_utils.h \
     buffer.h \
     config.h \
     game.h \
-    image.h \
+    image_utils.h \
     macros.h \
     shader.h \
-    texture.h \
-    platform/platform_asset_utils.h \
-    platform/platform_file_utils.h \
-    platform/platform_log.h \
-    platform/platform_macros.h \
-    platform/platform_gl.h
+    texture.h
 
 SOURCES += \
-    asset_utils.c \
-    buffer.c \
-    game.c \
-    image.c \
-    shader.c \
-    texture.c \
-    platform/platform_file_utils.c \
-    platform/platform_log.c
+    platform/platform_file_utils.cpp \
+    platform/platform_log.cpp \
+    asset.cpp \
+    asset_utils.cpp \
+    buffer.cpp \
+    game.cpp \
+    image_utils.cpp \
+    shader.cpp \
+    texture.cpp
 
 unix:!macx: LIBS += -L$$OUT_PWD/../LibPng/ -lPng
 

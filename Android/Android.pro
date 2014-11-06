@@ -7,11 +7,9 @@ ANDROID_PACKAGE_SOURCE_DIR = $$_PRO_FILE_PWD_
 LIBS += -lGLESv2 -llog -landroid
 
 SOURCES += \
-    jni/Engine.cpp \
-    jni/game.cpp \
-    jni/platform_asset_utils.c \
-    jni/platform_log.c \
-    jni/renderer_wrapper.c
+    jni/platform_asset_utils.cpp \
+    jni/platform_log.cpp \
+    jni/renderer_wrapper.cpp
 
 OTHER_FILES += \
     res/drawable-hdpi/ic_launcher.png \

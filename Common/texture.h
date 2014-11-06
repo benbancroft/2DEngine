@@ -1,6 +1,27 @@
-//#include "platform_gl.h"
-#include <GLES2/gl2.h>
+#ifndef TEXTURE_H
+#define TEXTURE_H
 
-GLuint load_texture(
-	const GLsizei width, const GLsizei height,
-	const GLenum type, const GLvoid* pixels);
+#include "platform/platform_gl.h"
+#include "platform/platform_file_utils.h"
+#include "asset.h"
+#include "asset_utils.h"
+
+namespace Assets
+{
+
+    class Texture : public Asset
+    {
+        using Asset::Asset;
+    
+        GLuint texture;
+
+    public:
+       GLuint getTexture();
+       bool loadTexture(const Platform::FileData* data);
+    };
+    
+    Texture* get_texture(std::string relative_path);
+
+}
+
+#endif

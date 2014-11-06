@@ -1,11 +1,36 @@
-//#include "platform_gl.h"
-#include <GLES2/gl2.h>
+#ifndef SHADER_H
+#define SHADER_H
 
-GLuint compile_shader(const GLenum type, const GLchar* source, const GLint length);
-GLuint link_program(const GLuint vertex_shader, const GLuint fragment_shader);
-GLuint build_program(
+#include "platform/platform_gl.h"
+#include "asset.h"
+#include "asset_utils.h"
+
+namespace Assets
+{
+
+    enum ShaderType { VERTEX, FRAGMENT };
+
+    class Shader : public Asset
+    {
+        using Asset::Asset;
+    
+        GLuint texture;
+
+    public:
+       /*GLuint getTexture();
+       bool loadTexture(const Platform::FileData* data);*/
+       GLuint compileShader(ShaderType type, const unsigned char* source, const unsigned int length);
+    };
+
+        //REMOVE!
+    GLuint compile_shader(const GLenum type, const GLchar* source, const GLint length);
+    GLuint link_program(const GLuint vertex_shader, const GLuint fragment_shader);
+    GLuint build_program(
 	const GLchar * vertex_shader_source, const GLint vertex_shader_source_length,
 	const GLchar * fragment_shader_source, const GLint fragment_shader_source_length);
 
-/* Should be called just before using a program to draw, if validation is needed. */
-GLint validate_program(const GLuint program);
+    GLint validate_program(const GLuint program);
+    
+}
+
+#endif
