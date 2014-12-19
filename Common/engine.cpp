@@ -1,21 +1,12 @@
-#include <iostream>
-#include <map>
-
 #include "engine.h"
-#include "asset.h"
-#include "asset_utils.h"
-#include "texture.h"
-#include "platform/platform_gl.h"
-#include "platform/platform_log.h"
-
-#include "platform/platform_asset_utils.h"
-#include "shader.h"
-
-#include "buffer.h"
 
 using namespace Core;
 
-static std::map <std::string, Assets::Asset> assetList;
+//static std::map <std::string, Assets::Asset> assetList;
+static bool isLoaded = false;
+static bool isLoading = false;
+static long unprocessedFrames = 0;
+static double lastTime = 0.0;
 
 static Assets::Texture* texture;
 static GLuint buffer;
@@ -35,7 +26,18 @@ Engine::Engine(){
 
 }
 
+void setLoading(bool state){
+    if (state == true){
+        isLoaded = false;
+        isLoading = true;
+    }else{
+        isLoading = false;
+    }
+}
+
 void Engine::SurfaceCreated() {
+
+    setLoading(true);
 
     DEBUG_LOG_WRITE_V("Render", "Surface created");
 
@@ -46,14 +48,21 @@ void Engine::SurfaceCreated() {
     DEBUG_LOG_WRITE_V("Render", "SHADER INIT LOAD");
     //texture = Assets::GetAsset<Assets::Texture>("textures/air_hockey_surface");
     //texture = load_png_asset_into_texture("textures/air_hockey_surface.png");
+
+    setLoading(false);
 }
 
 void Engine::RecreateGLContext(){
+    setLoading(true);
     //Should only really be ran for Android
     Assets::ReloadAssets();
+    setLoading(false);
 }
 
 void Engine::SurfaceChanged(int width, int height) {
+
+    this->width = width;
+    this->height = height;
 
     texture = Assets::GetTexture("textures/air_hockey_surface");
 
@@ -68,6 +77,30 @@ void Engine::SurfaceChanged(int width, int height) {
     a_position_location = glGetAttribLocation(program->GetProgram(), "a_Position");
     a_texture_coordinates_location = glGetAttribLocation(program->GetProgram(), "a_TextureCoordinates");
     u_texture_unit_location = glGetUniformLocation(program->GetProgram(), "u_TextureUnit");
+}
+
+void Engine::Animate(double currentTime){
+    if (isLoading == false && isLoaded == false){
+        lastTime = currentTime;
+        unprocessedFrames = 0;
+        isLoaded = true;
+    }else{
+        unprocessedFrames += (long)((currentTime-lastTime)*60.0/1000); // 60 fps
+
+        //max lag compensation
+        if (unprocessedFrames > 10) unprocessedFrames = 10;
+        while (unprocessedFrames > 1) {
+            this->Tick();
+            unprocessedFrames -= 1;
+        }
+        this->Render();
+    }
+}
+
+void Engine::Tick(){
+    //DEBUG_LOG_WRITE_V("Tick", "Ticking again");
+
+    std::for_each(levels.begin(), levels.end(), [](Level* level){ level->Tick();});
 }
 
 void Engine::Render() {
@@ -90,4 +123,16 @@ void Engine::Render() {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+//API
+
+Maths::Vector2<int> Engine::GetResolution(){
+    return Maths::Vector2<int>(width, height);
+}
+
+Level* Engine::RegisterLevel(Level* level){
+    levels.push_back(level);
+    level->SetEngine(this);
+    return level;
 }

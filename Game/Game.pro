@@ -10,9 +10,11 @@ TARGET = Game
 TEMPLATE = lib
 CONFIG += staticlib
 
-SOURCES += game.cpp
+SOURCES += game.cpp \
+    mainlevel.cpp
 
-HEADERS += game.h
+HEADERS += game.h \
+    mainlevel.h
 
 unix:!macx: LIBS += -L$$OUT_PWD/../Common/ -lCommon
 

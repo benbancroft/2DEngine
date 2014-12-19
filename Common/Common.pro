@@ -26,7 +26,10 @@ HEADERS += \
     macros.h \
     shader.h \
     texture.h \
-    engine.h
+    engine.h \
+    level.h \
+    vector.h \
+    entity.h
 
 SOURCES += \
     platform/platform_file_utils.cpp \
@@ -37,7 +40,10 @@ SOURCES += \
     image_utils.cpp \
     shader.cpp \
     texture.cpp \
-    engine.cpp
+    engine.cpp \
+    level.cpp \
+    vector.cpp \
+    entity.cpp
 
 unix:!macx: LIBS += -L$$OUT_PWD/../LibPng/ -lPng
 
