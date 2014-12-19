@@ -6,6 +6,8 @@ ANDROID_PACKAGE_SOURCE_DIR = $$_PRO_FILE_PWD_
 
 LIBS += -lGLESv2 -llog -landroid
 
+CONFIG += c++11
+
 SOURCES += \
     jni/platform_asset_utils.cpp \
     jni/platform_log.cpp \
@@ -36,3 +38,10 @@ INCLUDEPATH += $$PWD/../LibPng
 DEPENDPATH += $$PWD/../LibPng
 
 unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../LibPng/libPng.a
+
+unix:!macx: LIBS += -L$$OUT_PWD/../Game/ -lGame
+
+INCLUDEPATH += $$PWD/../Game
+DEPENDPATH += $$PWD/../Game
+
+unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../Game/libGame.a

@@ -20,7 +20,7 @@ namespace Assets
        bool loadTexture(const Platform::FileData* data);
     };
     
-    Texture* get_texture(std::string relative_path);
+    Texture* GetTexture(std::string relative_path);
 
 }
 

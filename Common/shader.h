@@ -4,6 +4,8 @@
 #include "platform/platform_gl.h"
 #include "asset.h"
 #include "asset_utils.h"
+#include "platform/platform_gl.h"
+#include "platform/platform_asset_utils.h"
 
 namespace Assets
 {
@@ -14,15 +16,27 @@ namespace Assets
     {
         using Asset::Asset;
     
-        GLuint texture;
+        GLuint vertex;
+        GLuint fragment;
+        GLuint program;
+
+        GLint linkShader();
 
     public:
+        void LoadShader(const Platform::FileData* shader, GLenum type);
+        GLint ValidateShader();
+        void LinkShaders();
+
+        GLuint GetProgram();
+
        /*GLuint getTexture();
        bool loadTexture(const Platform::FileData* data);*/
-       GLuint compileShader(ShaderType type, const unsigned char* source, const unsigned int length);
+       //GLuint compileShader(ShaderType type, const unsigned char* source, const unsigned int length);
     };
 
-        //REMOVE!
+    Shader* GetShader(std::string relative_path);
+
+    //REMOVE!
     GLuint compile_shader(const GLenum type, const GLchar* source, const GLint length);
     GLuint link_program(const GLuint vertex_shader, const GLuint fragment_shader);
     GLuint build_program(

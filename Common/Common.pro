@@ -10,6 +10,8 @@ TARGET = Common
 TEMPLATE = lib
 CONFIG += staticlib
 
+CONFIG += c++11
+
 HEADERS += \
     platform/platform_asset_utils.h \
     platform/platform_file_utils.h \
@@ -20,11 +22,11 @@ HEADERS += \
     asset_utils.h \
     buffer.h \
     config.h \
-    game.h \
     image_utils.h \
     macros.h \
     shader.h \
-    texture.h
+    texture.h \
+    engine.h
 
 SOURCES += \
     platform/platform_file_utils.cpp \
@@ -32,10 +34,10 @@ SOURCES += \
     asset.cpp \
     asset_utils.cpp \
     buffer.cpp \
-    game.cpp \
     image_utils.cpp \
     shader.cpp \
-    texture.cpp
+    texture.cpp \
+    engine.cpp
 
 unix:!macx: LIBS += -L$$OUT_PWD/../LibPng/ -lPng
 

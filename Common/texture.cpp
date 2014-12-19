@@ -33,7 +33,7 @@ namespace Assets {
         return true;
     }
 
-    Texture* get_texture(std::string relative_path){
+    Texture* GetTexture(std::string relative_path){
         Asset* assetClass = get_asset(relative_path);
         
         if (assetClass == NULL || assetClass->getType() != TEXTURE) return NULL;
