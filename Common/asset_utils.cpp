@@ -9,7 +9,7 @@
 
 namespace Assets {
 
-    bool loadAssetInstance(Asset* asset){
+    void loadAssetInstance(Asset* asset){
         switch(asset->getType()){
          case TEXTURE:
             {
