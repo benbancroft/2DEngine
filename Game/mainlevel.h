@@ -6,8 +6,9 @@
 
 class MainLevel : public Core::Level
 {
-    using Core::Level::Level;
 public:
+    MainLevel(int width, int height) : Core::Level::Level(width, height){}
+
     void Tick();
     void Render();
 };

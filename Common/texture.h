@@ -11,13 +11,13 @@ namespace Assets
 
     class Texture : public Asset
     {
-        using Asset::Asset;
     
         GLuint texture;
 
     public:
-       GLuint getTexture();
-       bool loadTexture(const Platform::FileData* data);
+        Texture(AssetType type, std::string url) : Asset(type, url) {}
+        GLuint getTexture();
+        bool loadTexture(const Platform::FileData* data);
     };
     
     Texture* GetTexture(std::string relative_path);

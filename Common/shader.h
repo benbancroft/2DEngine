@@ -14,7 +14,6 @@ namespace Assets
 
     class Shader : public Asset
     {
-        using Asset::Asset;
     
         GLuint vertex;
         GLuint fragment;
@@ -23,6 +22,7 @@ namespace Assets
         GLint linkShader();
 
     public:
+        Shader(AssetType type, std::string url) : Asset(type, url) {}
         void LoadShader(const Platform::FileData* shader, GLenum type);
         GLint ValidateShader();
         void LinkShaders();

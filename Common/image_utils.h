@@ -9,7 +9,7 @@ namespace ImageUtils
     typedef struct {
         unsigned int width;
         unsigned int height;
-        unsigned int size;
+        unsigned long size;
         const GLenum gl_color_format;
         const void* data;
     } RawImageData;
