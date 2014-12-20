@@ -58,6 +58,9 @@ void Shader::LoadShader(const Platform::FileData* shader, GLenum type) {
         log_shader_info_log(shader_object_id);
     }
 
+    DEBUG_LOG_WRITE_D(TAG, "Compile Status: ");
+    DEBUG_LOG_WRITE_D(TAG, compile_status == 0 ? "FALSE" : "TRUE");
+
     if (type == GL_VERTEX_SHADER){
         this->vertex = shader_object_id;
     }else if(type == GL_FRAGMENT_SHADER){
@@ -87,9 +90,16 @@ void Shader::LinkShaders() {
 
     assert(link_status != 0);
 
+    DEBUG_LOG_PRINT_D(TAG, "Results of linking program: %d %d", program_object_id ,this->GetProgram());
+
     validate_program(program_object_id);
 
-    this->program = program_object_id;
+    this->SetProgram(program_object_id);
+
+    //this->SetProgram(1000);
+
+    //this->program = program_object_id;
+    //this->program = 0;
 }
 
 /*GLuint build_program(
@@ -121,6 +131,10 @@ GLint validate_program(const GLuint program) {
 
 GLuint Shader::GetProgram(){
     return this->program;
+}
+
+void Shader::SetProgram(GLuint program){
+    this->program = program;
 }
 
 Shader* GetShader(std::string relative_path){

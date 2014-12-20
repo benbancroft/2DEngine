@@ -45,7 +45,7 @@ void Engine::SurfaceCreated() {
 
     Assets::LoadAsset("textures/air_hockey_surface", Assets::TEXTURE);
     Assets::LoadAsset("shaders/shader", Assets::SHADER);
-    DEBUG_LOG_WRITE_V("Render", "SHADER INIT LOAD");
+    DEBUG_LOG_WRITE_D("Render", "SHADER INIT LOAD");
     //texture = Assets::GetAsset<Assets::Texture>("textures/air_hockey_surface");
     //texture = load_png_asset_into_texture("textures/air_hockey_surface.png");
 
@@ -66,7 +66,7 @@ void Engine::SurfaceChanged(int width, int height) {
 
     texture = Assets::GetTexture("textures/air_hockey_surface");
 
-    //DEBUG_LOG_WRITE_V("Render", "Got texture");
+    DEBUG_LOG_WRITE_V("Render", "Got texture");
 
     buffer = create_vbo(sizeof(rect), rect, GL_STATIC_DRAW);
     //program = Assets::build_program_from_assets("shaders/shader.vsh", "shaders/shader.fsh");

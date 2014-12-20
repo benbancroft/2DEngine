@@ -9,53 +9,61 @@
 
 namespace Assets {
 
-    void loadAssetInstance(Asset* asset){
-        switch(asset->getType()){
+    Asset* loadAssetInstance(Asset* asset, AssetType type, const std::string relative_path){
+        switch(type){
          case TEXTURE:
             {
-                Platform::FileData file = Platform::get_asset_data(asset->getUrl() + ".png");
+                Platform::FileData file = Platform::get_asset_data(relative_path + ".png");
 
-
-                Texture* texture = (Texture*)asset;
-                texture->loadTexture(&file);
+                if (asset == NULL) asset = new Texture(type, relative_path);
+                //Texture* texture = (Texture*)asset;
+                static_cast<Texture*>(asset)->loadTexture(&file);
 
                 Platform::release_asset_data(&file);
 
-                DEBUG_LOG_WRITE_D(TAG, ("Loaded texture: " + asset->getUrl()).c_str());
+                DEBUG_LOG_WRITE_D(TAG, ("Loaded texture: " + relative_path).c_str());
             }
             break;
          case SHADER:
         {
-            Platform::FileData vertexShader = Platform::get_asset_data(asset->getUrl() + ".vsh");
-            Platform::FileData fragmentShader = Platform::get_asset_data(asset->getUrl() + ".fsh");
+            Platform::FileData vertexShader = Platform::get_asset_data(relative_path + ".vsh");
+            Platform::FileData fragmentShader = Platform::get_asset_data(relative_path + ".fsh");
 
-            Shader* shader = (Shader*)asset;
-            shader->LoadShader(&vertexShader, GL_VERTEX_SHADER);
-            shader->LoadShader(&fragmentShader, GL_FRAGMENT_SHADER);
-            shader->LinkShaders();
+            if (asset == NULL) asset = new Shader(type, relative_path);
+            //Shader* shader = (Shader*)asset;
+            static_cast<Shader*>(asset)->LoadShader(&vertexShader, GL_VERTEX_SHADER);
+            static_cast<Shader*>(asset)->LoadShader(&fragmentShader, GL_FRAGMENT_SHADER);
+            static_cast<Shader*>(asset)->LinkShaders();
+
+            DEBUG_LOG_WRITE_D(TAG, "DONE SHADER");
 
             Platform::release_asset_data(&vertexShader);
             Platform::release_asset_data(&fragmentShader);
 
+            DEBUG_LOG_WRITE_D(TAG, "DONE SHADER UNLOAD");
+
         }
          break;
         }
+        return asset;
     }
 
-    bool LoadAsset(const std::string relative_path, AssetType type, Asset* asset) {
-        if (relative_path.empty()) return false;
+    void LoadAsset(const std::string relative_path, AssetType type, Asset* asset) {
+        if (relative_path.empty()) return;
 
         bool assetExists = asset != NULL;
 
-        if (!assetExists) asset = new Asset(type, relative_path);
+        //if (!assetExists) asset = new Asset(type, relative_path);
 
         //Asset* asset = new Asset(type, relative_path);
 
-        loadAssetInstance(asset);
+        asset = loadAssetInstance(asset, type, relative_path);
+
+        DEBUG_LOG_PRINT_D(TAG, "DONE LOAD ASSET %s", asset->getUrl().c_str());
 
         if (!assetExists) assetList.push_back(asset);
-        
-        return true;
+
+        DEBUG_LOG_WRITE_D(TAG, "DONE PUSH ASSET");
     }
 
     void ReloadAssets(){

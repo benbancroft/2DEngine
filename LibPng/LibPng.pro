@@ -8,7 +8,13 @@ QT       -= core gui
 
 TARGET = Png
 TEMPLATE = lib
+
 CONFIG += staticlib
+
+emscripten{
+    INCLUDEPATH += $$PWD/../zlib
+    DEPENDPATH += $$PWD/../zlib
+}
 
 SOURCES += png.c \
                                   pngerror.c \

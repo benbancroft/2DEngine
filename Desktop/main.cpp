@@ -1,6 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#define GLFW_INCLUDE_ES2
 #include <GLFW/glfw3.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 #include "game.h"
 
 int init_gl();
@@ -22,7 +26,8 @@ int main()
         engine->SurfaceChanged(width, height);
 
         #ifdef __EMSCRIPTEN__
-            emscripten_set_main_loop(do_frame, 60, 1);
+            //0 makes it use requestAnimationFrame
+            emscripten_set_main_loop(do_frame, 0, 1);
         #else
             while (!glfwWindowShouldClose(window)) {
                 do_frame();

@@ -28,6 +28,7 @@ namespace Assets
         void LinkShaders();
 
         GLuint GetProgram();
+        void SetProgram(GLuint program);
 
        /*GLuint getTexture();
        bool loadTexture(const Platform::FileData* data);*/

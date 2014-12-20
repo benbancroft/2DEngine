@@ -45,12 +45,8 @@ SOURCES += \
     vector.cpp \
     entity.cpp
 
-unix:!macx: LIBS += -L$$OUT_PWD/../LibPng/ -lPng
-
 INCLUDEPATH += $$PWD/../LibPng
 DEPENDPATH += $$PWD/../LibPng
-
-unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../LibPng/libPng.a
 
 OTHER_FILES += \
     assets/textures/air_hockey_surface.png \
@@ -59,13 +55,9 @@ OTHER_FILES += \
 
 #Assets
 
-INSTALLS += textures shaders
+assets.path = $$OUT_PWD/../Desktop
+emscripten:assets.path = $$OUT_PWD/../Desktop/assets
+android:assets.path = /assets
+assets.files = assets/*
 
-textures.files += \
-    assets/textures/air_hockey_surface.png
-textures.path = /assets/textures
-
-shaders.files += \
-    assets/shaders/shader.fsh \
-    assets/shaders/shader.vsh
-shaders.path = /assets/shaders
+INSTALLS += assets
