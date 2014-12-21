@@ -9,7 +9,7 @@ class MainLevel : public Core::Level
 public:
     MainLevel(int width, int height) : Core::Level::Level(width, height){}
 
-    void Tick();
+    void Tick() override;
     void Render();
 };
 

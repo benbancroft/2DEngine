@@ -31,14 +31,14 @@ emscripten{
 }else{
     Target = Desktop
 
+    unix:!macx: LIBS += -L$$OUT_PWD/../Game/ -lGame
+    unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../Game/libGame.a
+
     unix:!macx: LIBS += -L$$OUT_PWD/../Common/ -lCommon
     unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../Common/libCommon.a
 
     unix:!macx: LIBS += -L$$OUT_PWD/../LibPng/ -lPng -lz
     unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../LibPng/libPng.a
-
-    unix:!macx: LIBS += -L$$OUT_PWD/../Game/ -lGame
-    unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../Game/libGame.a
 
 }
 

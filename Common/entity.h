@@ -1,10 +1,18 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-class Entity
+#include "platform/platform_log.h"
+
+namespace Core
 {
-public:
-    Entity();
-};
+    class Entity
+    {
+    public:
+        //Entity();
+
+        virtual void Tick();
+        virtual void Render(){}
+    };
+}
 
 #endif // ENTITY_H

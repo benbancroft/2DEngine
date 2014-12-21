@@ -25,6 +25,13 @@ OTHER_FILES += \
 HEADERS += \
     jni/platform_gl.h
 
+unix:!macx: LIBS += -L$$OUT_PWD/../Game/ -lGame
+
+INCLUDEPATH += $$PWD/../Game
+DEPENDPATH += $$PWD/../Game
+
+unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../Game/libGame.a
+
 unix:!macx: LIBS += -L$$OUT_PWD/../Common/ -lCommon
 
 INCLUDEPATH += $$PWD/../Common
@@ -38,10 +45,3 @@ INCLUDEPATH += $$PWD/../LibPng
 DEPENDPATH += $$PWD/../LibPng
 
 unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../LibPng/libPng.a
-
-unix:!macx: LIBS += -L$$OUT_PWD/../Game/ -lGame
-
-INCLUDEPATH += $$PWD/../Game
-DEPENDPATH += $$PWD/../Game
-
-unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../Game/libGame.a

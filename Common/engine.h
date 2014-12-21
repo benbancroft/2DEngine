@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include "level.h"
+#include "viewport.h"
 #include "vector.h"
 #include <iostream>
 #include <algorithm>
@@ -28,6 +29,16 @@ namespace Core
     private:
         int width;
         int height;
+
+        bool isLoaded = false;
+        bool isLoading = false;
+        long unprocessedFrames = 0;
+        double lastTime = 0.0;
+
+        std::vector <Level*> levels;
+        std::vector <Viewport*> viewports;
+
+        void setLoading(bool state);
 
     public:
         Engine();

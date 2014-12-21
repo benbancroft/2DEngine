@@ -29,7 +29,8 @@ HEADERS += \
     engine.h \
     level.h \
     vector.h \
-    entity.h
+    entity.h \
+    viewport.h
 
 SOURCES += \
     platform/platform_file_utils.cpp \
@@ -43,7 +44,8 @@ SOURCES += \
     engine.cpp \
     level.cpp \
     vector.cpp \
-    entity.cpp
+    entity.cpp \
+    viewport.cpp
 
 INCLUDEPATH += $$PWD/../LibPng
 DEPENDPATH += $$PWD/../LibPng
