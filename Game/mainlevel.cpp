@@ -1,10 +1,6 @@
 #include "mainlevel.h"
 
-void MainLevel::Tick(){
-    Level::Tick();
-    DEBUG_LOG_WRITE_V("Tick", "Ticking main level");
-}
-
-void MainLevel::Render(){
-
+void MainLevel::Tick(Core::Engine* engine){
+    Level::Tick(engine);
+    //DEBUG_LOG_WRITE_V("Tick", "Ticking main level");
 }

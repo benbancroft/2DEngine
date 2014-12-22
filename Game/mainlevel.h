@@ -9,8 +9,7 @@ class MainLevel : public Core::Level
 public:
     MainLevel(int width, int height) : Core::Level::Level(width, height){}
 
-    void Tick() override;
-    void Render();
+    void Tick(Core::Engine *engine);
 };
 
 #endif // MAINLEVEL_H

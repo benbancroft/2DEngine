@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <map>
 
+#include "render.h"
+
 #include "asset.h"
 #include "asset_utils.h"
 #include "texture.h"
@@ -17,19 +19,14 @@
 #include "platform/platform_asset_utils.h"
 #include "shader.h"
 
-#include "buffer.h"
-
 namespace Core
 {
 
     class Level;
 
-    class Engine
+    class Engine : public Render
     {
     private:
-        int width;
-        int height;
-
         bool isLoaded = false;
         bool isLoading = false;
         long unprocessedFrames = 0;
@@ -46,11 +43,12 @@ namespace Core
         void RecreateGLContext();
         void SurfaceChanged(int width, int height);
         void Animate(double currentTime);
-        void Render();
-        void Tick();
+        virtual void Loaded();
+        virtual void Render();
+        virtual void Tick();
 
-        Maths::Vector2<int> GetResolution();
         Level* RegisterLevel(Level* level);
+        Viewport* RegisterViewport(Viewport* viewport);
 
     };
 }

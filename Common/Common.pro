@@ -20,7 +20,6 @@ HEADERS += \
     platform/platform_macros.h \
     asset.h \
     asset_utils.h \
-    buffer.h \
     config.h \
     image_utils.h \
     macros.h \
@@ -30,14 +29,14 @@ HEADERS += \
     level.h \
     vector.h \
     entity.h \
-    viewport.h
+    viewport.h \
+    render.h
 
 SOURCES += \
     platform/platform_file_utils.cpp \
     platform/platform_log.cpp \
     asset.cpp \
     asset_utils.cpp \
-    buffer.cpp \
     image_utils.cpp \
     shader.cpp \
     texture.cpp \
@@ -45,7 +44,8 @@ SOURCES += \
     level.cpp \
     vector.cpp \
     entity.cpp \
-    viewport.cpp
+    viewport.cpp \
+    render.cpp
 
 INCLUDEPATH += $$PWD/../LibPng
 DEPENDPATH += $$PWD/../LibPng

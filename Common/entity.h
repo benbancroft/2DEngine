@@ -1,17 +1,22 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include "engine.h"
+#include "viewport.h"
 #include "platform/platform_log.h"
 
 namespace Core
 {
+    class Engine;
+    class Viewport;
+
     class Entity
     {
     public:
-        //Entity();
+        Entity();
 
-        virtual void Tick();
-        virtual void Render(){}
+        virtual void Tick(Engine *engine);
+        virtual void Render(Core::Render *render);
     };
 }
 

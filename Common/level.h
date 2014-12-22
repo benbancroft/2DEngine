@@ -15,6 +15,7 @@ namespace Core
 
     class Engine;
     class Viewport;
+    class Entity;
 
     class Level
     {
@@ -36,8 +37,9 @@ namespace Core
             entities.push_back(entity);
         }
 
-        virtual void Tick();
-        virtual void Render(Viewport* viewport);
+        virtual void Loaded();
+        virtual void Tick(Engine *engine);
+        void Render(Core::Render* render);
     };
 
 }

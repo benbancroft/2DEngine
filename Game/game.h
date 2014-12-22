@@ -14,9 +14,11 @@ Core::Engine* InitialiseGame();
 class Game : public Core::Engine
 {
     Core::Level* mainLevel;
+    Core::Viewport* mainViewport;
 
 public:
 Game();
+void Loaded();
 };
 
 #endif // GAME_H
