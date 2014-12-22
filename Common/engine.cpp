@@ -60,7 +60,7 @@ namespace Core {
     }
 
     void Engine::Loaded(){
-        std::for_each(levels.begin(), levels.end(), [this](Level* level){ level->Loaded();});
+        std::for_each(levels.begin(), levels.end(), [this](Level* level){ level->Loaded(this);});
     }
 
     void Engine::Tick(){
@@ -80,6 +80,7 @@ namespace Core {
 
     Level* Engine::RegisterLevel(Level* level){
         levels.push_back(level);
+        level->Loaded(this);
         return level;
     }
 

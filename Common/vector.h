@@ -4,9 +4,12 @@
 #include <iostream>
 #include <set>
 #include <vector>
+#include <math.h>
 
 namespace Maths
 {
+
+    static const double PI = M_PI;
 
     template <typename Type>
     class Vector2 {

@@ -6,7 +6,7 @@
 #include "vector.h"
 
 #include "mainlevel.h"
-#include "entity.h"
+#include "testentity.h"
 
 Core::Engine* InitialiseGame();
 

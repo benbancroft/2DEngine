@@ -8,6 +8,8 @@
 #include "viewport.h"
 #include "entity.h"
 
+#include <algorithm>
+
 #include "platform/platform_log.h"
 
 namespace Core
@@ -33,11 +35,9 @@ namespace Core
             this->engine = engine;
         }*/
 
-        void AddEntity(Entity* entity){
-            entities.push_back(entity);
-        }
+        void AddEntity(Entity* entity, Engine* engine);
 
-        virtual void Loaded();
+        virtual void Loaded(Engine *engine);
         virtual void Tick(Engine *engine);
         void Render(Core::Render* render);
     };

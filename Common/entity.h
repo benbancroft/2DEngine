@@ -10,13 +10,45 @@ namespace Core
     class Engine;
     class Viewport;
 
+    struct AlarmData{
+        int startTime = 0;
+        int delay = 0;
+
+        AlarmData(){}
+        AlarmData(int startTime, int delay){
+            this->startTime = startTime;
+            this->delay = delay;
+        }
+    };
+
     class Entity
     {
     public:
         Entity();
 
+        void SetAlarm(int index, int ticks);
+        void DirectTowards(Maths::Vector2<double> position);
+
+        virtual void Loaded(Engine* engine);
         virtual void Tick(Engine *engine);
         virtual void Render(Core::Render *render);
+        virtual void Alarm(int index);
+
+        int aliveTime = 0;
+
+        double x = 0.0;
+        double y = 0.0;
+        double lastX = 0.0;
+        double lastY = 0.0;
+        double direction = 0.0;
+        double speed = 0.0;
+
+        int depth = 1;
+
+        std::string spriteSheet = "";
+        int spriteIndex = 0;
+
+        std::map<int, AlarmData> alarms;
     };
 }
 

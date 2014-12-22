@@ -11,10 +11,12 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += game.cpp \
-    mainlevel.cpp
+    mainlevel.cpp \
+    testentity.cpp
 
 HEADERS += game.h \
-    mainlevel.h
+    mainlevel.h \
+    testentity.h
 
 INCLUDEPATH += $$PWD/../Common
 DEPENDPATH += $$PWD/../Common
