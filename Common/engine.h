@@ -29,6 +29,7 @@ namespace Core
     private:
         bool isLoaded = false;
         bool isLoading = false;
+        bool beenLoaded = false;
         long unprocessedFrames = 0;
         double lastTime = 0.0;
 
@@ -46,6 +47,9 @@ namespace Core
         virtual void Loaded();
         virtual void Render();
         virtual void Tick();
+
+        virtual void OnTouchPress(double x, double y);
+        virtual void OnTouchDrag(double x, double y);
 
         Level* RegisterLevel(Level* level);
         Viewport* RegisterViewport(Viewport* viewport);

@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 #include <math.h>
+#include "platform/platform_log.h"
 
 namespace Maths
 {
@@ -140,6 +141,13 @@ namespace Maths
             return os << "(" << pt.x << "," << pt.y << "," << pt.z << "," << pt.w << ")";
         }
     };
+
+    template <typename Type>
+    double distanceBetweenPoints(Vector2<Type> v1, Vector2<Type> v2){
+        Vector2<Type> v(v2.GetX()-v1.GetX(), v2.GetY()-v1.GetY());
+
+        return sqrt(v.square());
+    }
 
 }
 

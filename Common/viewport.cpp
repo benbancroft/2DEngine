@@ -24,4 +24,21 @@ namespace Core {
         render->SetUseViewport(false);
     }
 
+    void touchHandle(Viewport* viewport, double x, double y, void (Level::*func)(double, double)){
+        if (x >= viewport->x && y >= viewport->y && x <= viewport->x+viewport->width && y <= viewport->y+viewport->height){
+            x = (x - viewport->x) / viewport->width * viewport->levelWidth;
+            y = (y - viewport->y) / viewport->height * viewport->levelHeight;
+
+            (viewport->level->*func)(x, y);
+        }
+    }
+
+    void Viewport::OnTouchPress(double x, double y){
+        touchHandle(this, x, y, &Level::OnTouchPress);
+    }
+
+    void Viewport::OnTouchDrag(double x, double y){
+        touchHandle(this, x, y, &Level::OnTouchDrag);
+    }
+
 }

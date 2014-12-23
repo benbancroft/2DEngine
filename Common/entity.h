@@ -34,6 +34,9 @@ namespace Core
         virtual void Render(Core::Render *render);
         virtual void Alarm(int index);
 
+        virtual void OnTouchPress(double x, double y);
+        virtual void OnTouchDrag(double x, double y);
+
         int aliveTime = 0;
 
         double x = 0.0;

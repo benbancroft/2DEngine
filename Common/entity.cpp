@@ -10,7 +10,7 @@ namespace Core {
     }
 
     void Entity::DirectTowards(Maths::Vector2<double> position){
-        this->direction = Maths::PI/2 + atan2(position.GetY()-y, position.GetX()-x);
+        this->direction = -Maths::PI/2 + atan2(position.GetX()-x,position.GetY()-y);
     }
 
     void Entity::Tick(Engine* engine){
@@ -31,6 +31,12 @@ namespace Core {
     }
 
     void Entity::Alarm(int index){
+    }
+
+    void Entity::OnTouchPress(double x, double y){
+    }
+
+    void Entity::OnTouchDrag(double x, double y){
     }
 
 }

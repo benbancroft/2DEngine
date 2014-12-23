@@ -45,7 +45,10 @@ namespace Core {
             lastTime = currentTime;
             unprocessedFrames = 0;
             isLoaded = true;
-            Loaded();
+            if (!beenLoaded) {
+                beenLoaded = true;
+                Loaded();
+            }
         }else{
             unprocessedFrames += (long)((currentTime-lastTime)*60.0/1000); // 60 fps
 
@@ -74,6 +77,22 @@ namespace Core {
         this->ResetRenderer(true);
 
         std::for_each(viewports.begin(), viewports.end(), [this](Viewport* viewport){ viewport->Render(this); });
+    }
+
+    //Input
+
+    void Engine::OnTouchPress(double x, double y){
+        //DEBUG_LOG_WRITE_V("Tick", "Press again");
+        //DEBUG_LOG_PRINT_V("Engine", "press X: %f Y: %f", x, y);
+
+        std::for_each(viewports.begin(), viewports.end(), [x, y](Viewport* viewport){ viewport->OnTouchPress(x, y); });
+    }
+
+    void Engine::OnTouchDrag(double x, double y){
+        //DEBUG_LOG_WRITE_V("Tick", "Drag again");
+        //DEBUG_LOG_PRINT_V("Engine", "drag X: %f Y: %f", x, y);
+
+        std::for_each(viewports.begin(), viewports.end(), [x, y](Viewport* viewport){ viewport->OnTouchDrag(x, y); });
     }
 
     //API

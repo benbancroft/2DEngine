@@ -40,6 +40,9 @@ namespace Core
         virtual void Loaded(Engine *engine);
         virtual void Tick(Engine *engine);
         void Render(Core::Render* render);
+
+        virtual void OnTouchPress(double x, double y);
+        virtual void OnTouchDrag(double x, double y);
     };
 
 }

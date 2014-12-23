@@ -7,13 +7,23 @@ void TestEntity::Loaded(Core::Engine* engine){
     x = res.GetX()/2;
     y = res.GetY()/2;
 
-    speed = 0.05;
+    speed = 0;
 
-    SetAlarm(0, 150);
+    //SetAlarm(0, 150);
 }
 
 void TestEntity::Tick(Core::Engine *engine){
     Entity::Tick(engine);
+
+    if (hasTarget){
+        double distance = Maths::distanceBetweenPoints(Maths::Vector2<double>(x, y), target);
+        if (distance <= speed){
+            speed = 0;
+            x = target.GetX();
+            y = target.GetY();
+            hasTarget = false;
+        }
+    }
 }
 
 void TestEntity::Render(Core::Render *render){
@@ -25,4 +35,25 @@ void TestEntity::Alarm(int index){
         DEBUG_LOG_WRITE_V("Alarm", "Alarm Entity");
         SetAlarm(0, 150);
     }
+}
+
+void TestEntity::OnTouchPress(double x, double y){
+
+    speed = 0.5;
+
+    target = Maths::Vector2<double>(x, y);
+    hasTarget = true;
+
+    this->DirectTowards(target);
+
+    //this->x = target.GetX();
+    //this->y = target.GetY();
+
+    DEBUG_LOG_WRITE_V("Tick", "Press again");
+    DEBUG_LOG_PRINT_V("Engine", "press X: %f Y: %f current X: %f Y: %f angle: %f", x, y, this->x, this->y, this->direction);
+}
+
+void TestEntity::OnTouchDrag(double x, double y){
+    DEBUG_LOG_WRITE_V("Tick", "Drag again");
+    DEBUG_LOG_PRINT_V("Engine", "drag X: %f Y: %f", x, y);
 }

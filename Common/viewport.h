@@ -12,6 +12,9 @@ namespace Core {
 
     class Viewport
     {
+    public:
+        Level* level;
+
         double x = 0.0;
         double y = 0.0;
         int width = 0.0;
@@ -22,10 +25,11 @@ namespace Core {
         int levelWidth = 0.0;
         int levelHeight = 0.0;
 
-        Level* level;
-    public:
         Viewport(Level* level, double x, double y, int width, int height, double levelX, double levelY, int levelWidth, int levelHeight);
         void Render(Core::Render* render);
+
+        virtual void OnTouchPress(double x, double y);
+        virtual void OnTouchDrag(double x, double y);
     };
 
 }

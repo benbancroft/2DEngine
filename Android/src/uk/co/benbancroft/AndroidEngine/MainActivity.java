@@ -7,6 +7,9 @@ import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -32,8 +35,43 @@ public class MainActivity extends Activity {
 				glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 			}
 
+                        final RendererWrapper rendererWrapper = new RendererWrapper(this);
 			glSurfaceView.setEGLContextClientVersion(2);
-			glSurfaceView.setRenderer(new RendererWrapper(this));
+                        glSurfaceView.setRenderer(rendererWrapper);
+
+                        glSurfaceView.setOnTouchListener(new OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if (event != null) {
+                                // Convert touch coordinates into normalized device
+                                // coordinates, keeping in mind that Android's Y
+                                // coordinates are inverted.
+                                //final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
+                                //final float normalizedY = -((event.getY() / (float) v.getHeight()) * 2 - 1);
+
+                                final float pointerX = event.getX();
+                                final float pointerY = event.getY();
+
+                                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                    glSurfaceView.queueEvent(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        rendererWrapper.handleTouchPress(pointerX, pointerY);
+                                    }});
+                                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                                    glSurfaceView.queueEvent(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        rendererWrapper.handleTouchDrag(pointerX, pointerY);
+                                    }});
+                                }
+
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }});
+
 			rendererSet = true;
 			setContentView(glSurfaceView);
 		} else {

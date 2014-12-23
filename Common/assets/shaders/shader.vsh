@@ -59,7 +59,7 @@ void main() {
                 vec2 scenePos = u_viewportScene[0];
                 vec2 sceneDim = u_viewportScene[1];
 
-                position = viewportPos.xy+(viewportDim.xy / sceneDim.xy)*(position.xy+scenePos.xy)-(viewportDim.xy/2.0);;
+                position = viewportPos.xy+(viewportDim.xy / sceneDim.xy)*(position.xy+scenePos.xy)-(viewportDim.xy/2.0);
                 //dimension = vec2((viewportDim.x / sceneDim.x)*dimension.x, (viewportDim.y / sceneDim.y)*dimension.y);
                 dimension = (viewportDim.xy / sceneDim.xy)*dimension.xy;
         }

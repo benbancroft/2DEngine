@@ -20,6 +20,21 @@ static double now_ms() {
 }
 
 extern "C" {
+
+    JNIEXPORT void JNICALL Java_uk_co_benbancroft_AndroidEngine_RendererWrapper_on_1touch_1press(
+        JNIEnv* env, jclass cls, jfloat normalized_x, jfloat normalized_y) {
+        UNUSED(env);
+        UNUSED(cls);
+        engine->OnTouchPress(normalized_x, normalized_y);
+    }
+
+    JNIEXPORT void JNICALL Java_uk_co_benbancroft_AndroidEngine_RendererWrapper_on_1touch_1drag(
+        JNIEnv* env, jclass cls, jfloat normalized_x, jfloat normalized_y) {
+        UNUSED(env);
+        UNUSED(cls);
+        engine->OnTouchDrag(normalized_x, normalized_y);
+    }
+
     JNIEXPORT void JNICALL Java_uk_co_benbancroft_AndroidEngine_RendererWrapper_on_1surface_1created(
         JNIEnv * env, jclass cls) {
         UNUSED(env);

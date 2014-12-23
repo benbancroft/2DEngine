@@ -51,4 +51,12 @@ namespace Core {
     void Level::Render(Core::Render *render){
         std::for_each(entities.begin(), entities.end(), [render](Entity* entity){ entity->Render(render); });
     }
+
+    void Level::OnTouchPress(double x, double y){
+        std::for_each(entities.begin(), entities.end(), [x, y](Entity* entity){ entity->OnTouchPress(x, y); });
+    }
+
+    void Level::OnTouchDrag(double x, double y){
+        std::for_each(entities.begin(), entities.end(), [x, y](Entity* entity){ entity->OnTouchDrag(x, y); });
+    }
 }
