@@ -20,9 +20,10 @@ namespace Core {
     void Entity::Render(Core::Render *render){
         //DEBUG_LOG_WRITE_V("Render", "Rendering Entity");
 
-        render->SetColour(Maths::Vector4<float>(0.0,1.0,0.0,1.0));
+        render->SetShader("shaders/draw", ShaderType::Draw);
+        render->SetColour(Maths::Vector4<float>(1.0,1.0,0.0,1.0));
         render->SetUseColour(true);
-        render->SetDimensions(Maths::Vector2<int>(20,20));
+        render->SetDimensions(Maths::Vector2<float>(20,20));
         render->Draw(Maths::Vector2<float>(x, y));
     }
 

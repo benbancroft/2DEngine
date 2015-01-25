@@ -53,6 +53,23 @@ namespace Maths
             y -= pt.y;
             return true;
         }
+
+        Vector2<Type> operator*(const int val) {
+            x *= val;
+            y *= val;
+            return *this;
+        }
+
+        Vector2<Type> operator/(const int val) {
+            x /= val;
+            y /= val;
+            return *this;
+        }
+        Vector2<Type> operator%(const int val) {
+            x %= val;
+            y %= val;
+            return *this;
+        }
         bool operator=(const Vector2& pt) {
             x = pt.x;
             y = pt.y;

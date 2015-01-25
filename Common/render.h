@@ -7,7 +7,7 @@
 #include "vector.h"
 #include "texture.h"
 
-enum ShaderType { Draw ,Tile };
+enum ShaderType { None, Draw ,Tile };
 
 namespace Core
 {
@@ -30,17 +30,26 @@ namespace Core
 
         GLint verticiesLocation;
 
-        ShaderType shaderType = Draw;
+        ShaderType shaderType = None;
 
         //Draw shader
         GLint useColourLocation = NULL;
         GLint positionLocation = NULL;
         GLint uvLocation = NULL;
 
+        //Tile shader
+        GLint tileMapSquareSizeLocation = NULL;
+        GLint tileMapChunkSizeLocation = NULL;
+        GLint tileMapOffsetLocation = NULL;
+        GLint tileMapSeperationLocation = NULL;
+        GLint tileMapLocation = NULL;
+        GLint tileSheetSquareSizeLocation = NULL;
+        GLint tileSheetSizeLocation = NULL;
+
         GLuint shader;
         GLuint texture;
 
-        Maths::Vector2<int> dimensions;
+        Maths::Vector2<float> dimensions;
         int depth = 0;
         std::string textureURL = "";
         bool useColourState = false;
@@ -67,14 +76,14 @@ namespace Core
         Render();
         void InitiseRenderer();
         void ResetRenderer(bool isDraw);
-        virtual void SetDimensions(Maths::Vector2<int> dimensions, bool force = false);
+        virtual void SetDimensions(Maths::Vector2<float> dimensions, bool force = false);
         void SetTexture(std::string url, bool force = false);
         void SetDepth(int depth, bool force = false);
         void SetUseColour(bool state, bool force = false);
         void SetUseAlpha(bool state, bool force = false);
         void SetUseColourBlending(bool state, bool force = false);
         void SetColour(Maths::Vector4<float> colour, bool force = false);
-        void SetShader(std::string url, bool force = false);
+        void SetShader(std::string url, ShaderType type, bool force = false);
         void SetResolution(Maths::Vector2<int> resolution, bool force = false);
         virtual void SetUseSprite(std::string url, int index, double xScale = 1.0, double yScale = 1.0);
 
@@ -83,6 +92,8 @@ namespace Core
         void SetViewportScene(Maths::Vector2<float>  position, Maths::Vector2<int> dimensions, bool force = false);
 
         virtual void Draw(Maths::Vector2<float> position);
+
+        virtual void DrawTileChunk(Maths::Vector2<int> location, std::string tileSheet, int squareSize, int chunkSize, GLuint chunkData);
 
         Maths::Vector2<int> GetResolution();
 

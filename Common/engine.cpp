@@ -22,7 +22,9 @@ namespace Core {
         DEBUG_LOG_WRITE_V("Render", "Surface created");
 
         Assets::LoadAsset("textures/air_hockey_surface", Assets::TEXTURE);
-        Assets::LoadAsset("shaders/shader", Assets::SHADER);
+        Assets::LoadAsset("textures/tilesheet", Assets::AssetType::TEXTURE);
+        Assets::LoadAsset("shaders/draw", Assets::SHADER);
+        Assets::LoadAsset("shaders/tile", Assets::SHADER);
     }
 
     void Engine::RecreateGLContext(){
@@ -34,6 +36,8 @@ namespace Core {
 
     void Engine::SurfaceChanged(int width, int height) {
 
+        DEBUG_LOG_WRITE_D("TAG", "Changed");
+        SetShader("shaders/draw", ShaderType::Draw, true);
         this->InitiseRenderer();
         this->SetResolution(Maths::Vector2<int>(width, height));
 

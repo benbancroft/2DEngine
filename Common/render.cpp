@@ -4,6 +4,7 @@ namespace Core {
 
     Render::Render()
     {
+        renderState.shaderType = ShaderType::Draw;
     }
 
     GLuint createVBO(const GLsizeiptr size, const GLvoid* data, const GLenum usage) {
@@ -21,9 +22,6 @@ namespace Core {
 
     void Render::InitiseRenderer(){
         setHasRenderState(true);
-
-        SetShader("shaders/shader", true);
-        renderState.shaderType = ShaderType::Draw;
 
         static const float rect[] = {
             0.0f, 0.0f,
@@ -45,30 +43,38 @@ namespace Core {
         renderState.viewportSettingsLocation = glGetUniformLocation(renderState.shader, "u_viewport");
         renderState.viewportSceneSettingsLocation = glGetUniformLocation(renderState.shader, "u_viewportScene");
 
+        //DEBUG_LOG_WRITE_D("TAG", "HERE");
+
+
+        renderState.positionLocation = glGetUniformLocation(renderState.shader, "u_position");
 
         if (renderState.shaderType == ShaderType::Draw){
             renderState.uvLocation = glGetUniformLocation(renderState.shader, "u_uvs");
-            renderState.positionLocation = glGetUniformLocation(renderState.shader, "u_position");
             renderState.useColourLocation = glGetUniformLocation(renderState.shader, "u_useColour");
         }
 
-        /*if (renderState.shaderType == ShaderType::TILE){
+        if (renderState.shaderType == ShaderType::Tile){
             renderState.tileMapSquareSizeLocation = glGetUniformLocation(renderState.shader, "u_mapSquareSize");
-            renderState.tileMapSizeLocation = glGetUniformLocation(renderState.shader, "u_mapSize");
+            renderState.tileMapChunkSizeLocation = glGetUniformLocation(renderState.shader, "u_mapChunkSize");
+            renderState.tileSheetSquareSizeLocation = glGetUniformLocation(renderState.shader, "u_tileSheetSquareSize");
             renderState.tileMapOffsetLocation = glGetUniformLocation(renderState.shader, "u_mapOffsetSize");
             renderState.tileMapSeperationLocation = glGetUniformLocation(renderState.shader, "u_mapSeperationSize");
             renderState.tileMapLocation = glGetUniformLocation(renderState.shader, "u_mapTile");
             renderState.tileSheetSizeLocation = glGetUniformLocation(renderState.shader, "u_tileSheetSize");
-        }*/
+        }
 
         renderState.verticiesLocation = glGetAttribLocation(renderState.shader, "a_verticies");
         glEnableVertexAttribArray(renderState.verticiesLocation);
 
         glVertexAttribPointer(renderState.verticiesLocation, 2, GL_FLOAT, false, 0, 0);
 
+        if (renderState.shaderType == ShaderType::Draw){
+            SetUseColour(false, true);
+        }
+
         SetResolution(renderState.resolution, true);
-        SetUseColour(false, true);
         SetColour(renderState.colour, true);
+        SetUseAlpha(true, true);
 
         //SetTexture(this.textureURL);
         glUniform1i(renderState.textureSampleLocation, 0);
@@ -87,16 +93,17 @@ namespace Core {
     void Render::ResetRenderer(bool isDraw){
         if (isDraw){
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            SetShader("shaders/draw", ShaderType::Draw, true);
         }
         SetUseAlpha(true, true);
-        SetUseColourBlending(false, true);
+        SetUseColourBlending(true, true);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    void Render::SetDimensions(Maths::Vector2<int> dimensions, bool force){
+    void Render::SetDimensions(Maths::Vector2<float> dimensions, bool force){
         if (!hasRenderState() || (!force && renderState.dimensions == dimensions)) return;
         renderState.dimensions = dimensions;
         glUniform2f(renderState.dimensionLocation, dimensions.GetX(), dimensions.GetY());
@@ -147,13 +154,21 @@ namespace Core {
         glUniform4f(renderState.colourLocation, colour.GetX(),colour.GetY(), colour.GetZ(), colour.GetW());
     }
 
-    void Render::SetShader(std::string url, bool force){
-        if (!hasRenderState() || (!force && url == renderState.shaderURL)) return;
+    void Render::SetShader(std::string url, ShaderType type, bool force){
+        if (/*!hasRenderState() || */(!force && url == renderState.shaderURL)) return;
         auto shader = Assets::GetShader(url);
         if (shader != NULL){
             renderState.shaderURL = url;
             renderState.shader = shader->GetProgram();
             glUseProgram(shader->GetProgram());
+
+            //DEBUG_LOG_PRINT_D("Tag", "Shader: %s", url.c_str());
+
+        }
+        auto oldType = renderState.shaderType;
+        if (oldType != type){
+            renderState.shaderType = type;
+            InitiseRenderer();
         }
     }
 
@@ -201,10 +216,38 @@ namespace Core {
 
     void Render::Draw(Maths::Vector2<float> position){
         if (!hasRenderState()) return;
-        if (renderState.shaderType == ShaderType::Draw){
+        //if (renderState.shaderType == ShaderType::Draw){
             glUniform2f(renderState.positionLocation, position.GetX(), position.GetY());
-        }
+        //}
         glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+    void Render::DrawTileChunk(Maths::Vector2<int> location, std::string tileSheet, int squareSize, int chunkSize, GLuint chunkData){
+
+        SetShader("shaders/tile", ShaderType::Tile);
+
+        SetDimensions(Maths::Vector2<float>(chunkSize, chunkSize)*squareSize);
+
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(renderState.textureSampleLocation, 0);
+        SetTexture(tileSheet, true);
+
+        glActiveTexture(GL_TEXTURE1);
+        glUniform1i(renderState.tileMapLocation, 1);
+        glBindTexture(GL_TEXTURE_2D, chunkData);
+
+        glUniform1f(renderState.tileMapSquareSizeLocation, squareSize);
+        glUniform1f(renderState.tileMapChunkSizeLocation, chunkSize);
+        glUniform2f(renderState.tileMapOffsetLocation, 0, 0);
+        glUniform2f(renderState.tileMapSeperationLocation, 0, 0);
+        glUniform1f(renderState.tileSheetSquareSizeLocation, 32.0);
+        glUniform2f(renderState.tileSheetSizeLocation, 256, 256);
+
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        Draw(Maths::Vector2<float>(location.GetX(), location.GetY())*chunkSize*squareSize);
+
+        //glActiveTexture(GL_TEXTURE0);
     }
 
 }

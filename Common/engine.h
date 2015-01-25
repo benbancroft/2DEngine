@@ -22,8 +22,6 @@
 namespace Core
 {
 
-    class Level;
-
     class Engine : public Render
     {
     private:

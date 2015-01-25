@@ -30,7 +30,10 @@ HEADERS += \
     vector.h \
     entity.h \
     viewport.h \
-    render.h
+    render.h \
+    tiles/tilelayer.h \
+    tiles/tilegenerator.h \
+    tiles/tilesystem.h
 
 SOURCES += \
     platform/platform_file_utils.cpp \
@@ -45,7 +48,10 @@ SOURCES += \
     vector.cpp \
     entity.cpp \
     viewport.cpp \
-    render.cpp
+    render.cpp \
+    tiles/tilelayer.cpp \
+    tiles/tilegenerator.cpp \
+    tiles/tilesystem.cpp
 
 INCLUDEPATH += $$PWD/../LibPng
 DEPENDPATH += $$PWD/../LibPng
@@ -53,7 +59,12 @@ DEPENDPATH += $$PWD/../LibPng
 OTHER_FILES += \
     assets/textures/air_hockey_surface.png \
     assets/shaders/shader.fsh \
-    assets/shaders/shader.vsh
+    assets/shaders/shader.vsh \
+    assets/textures/tilesheet.png \
+    assets/shaders/draw.fsh \
+    assets/shaders/draw.vsh \
+    assets/shaders/tile.fsh \
+    assets/shaders/tile.vsh
 
 #Assets
 

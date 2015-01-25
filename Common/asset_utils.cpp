@@ -80,7 +80,7 @@ namespace Assets {
     
     Asset *get_asset(std::string relative_path){
 
-        DEBUG_LOG_WRITE_V(TAG, ("Finding asset: " + relative_path).c_str());
+        //DEBUG_LOG_WRITE_V(TAG, ("Finding asset: " + relative_path).c_str());
     
         for(std::vector<Asset*>::iterator it = assetList.begin(); it != assetList.end(); ++it) {
             if ((*it)->getUrl() == relative_path) return *it;
