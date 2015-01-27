@@ -92,15 +92,19 @@ namespace Core {
 
     void Render::ResetRenderer(bool isDraw){
         if (isDraw){
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT/* | GL_DEPTH_BUFFER_BIT*/);
+            //glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
             SetShader("shaders/draw", ShaderType::Draw, true);
         }
-        SetUseAlpha(true, true);
+        glDisable(GL_CULL_FACE);
+        SetUseAlpha(false, true);
         SetUseColourBlending(true, true);
-        glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         glDepthFunc(GL_LEQUAL);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
     }
 
     void Render::SetDimensions(Maths::Vector2<float> dimensions, bool force){
@@ -222,11 +226,12 @@ namespace Core {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    void Render::DrawTileChunk(Maths::Vector2<int> location, std::string tileSheet, int squareSize, int chunkSize, GLuint chunkData){
+    void Render::DrawTileChunk(Maths::Vector2<int> location, std::string tileSheet, int squareSize, int chunkSize, GLuint chunkData, int depth){
 
         SetShader("shaders/tile", ShaderType::Tile);
 
         SetDimensions(Maths::Vector2<float>(chunkSize, chunkSize)*squareSize);
+        SetDepth(depth);
 
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(renderState.textureSampleLocation, 0);

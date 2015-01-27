@@ -2,12 +2,26 @@
 #define TESTENTITY_H
 
 #include "entity.h"
+#include "engine.h"
 
 class TestEntity : public Core::Entity
 {
+    using Core::Entity::Entity;
+
     bool hasTarget = false;
     Maths::Vector2<double> target;
 public:
+
+    virtual void test(){
+        DEBUG_LOG_WRITE_D("TST", "derived");
+    }
+
+    TestEntity(Core::Engine* engine, Core::Level* level) : Entity(engine, level){
+        //Entity::registerEntity(this, engine);
+        level->AddEntity(this, engine);
+
+    }
+
     void Loaded(Core::Engine* engine);
     void Tick(Core::Engine *engine);
     void Render(Core::Render *render);

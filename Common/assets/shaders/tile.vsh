@@ -51,10 +51,10 @@ vec2 toScreenSpace(vec2 position){
 
 void main() {
 	
-	float depth = 0.0;
-	if (u_depth >= 0){
-		depth = -1.0 / float(u_depth+1);
-	}
+    float depth = 0.0;
+    if (u_depth >= 0){
+            depth = -1.0 / float(u_depth+1);
+    }
 	
 			vec2 viewportPos = u_viewport[0];
 		vec2 viewportDim = u_viewport[1];
@@ -102,5 +102,5 @@ void main() {
         if (u_mapSquareSize == 32.0) vDebugColour = vec4(1.0,1.0,0.0,1.0);
         else vDebugColour = vec4(0.0,0.0,1.0,1.0);
 
-        gl_Position = vec4(toScreenSpace(position + a_verticies*dimension), depth, 1);
+        gl_Position = vec4(toScreenSpace(position + a_verticies*dimension), 0, 1);
 }

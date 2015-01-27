@@ -33,7 +33,8 @@ HEADERS += \
     render.h \
     tiles/tilelayer.h \
     tiles/tilegenerator.h \
-    tiles/tilesystem.h
+    tiles/tilesystem.h \
+    depthrenderable.h
 
 SOURCES += \
     platform/platform_file_utils.cpp \
@@ -51,7 +52,8 @@ SOURCES += \
     render.cpp \
     tiles/tilelayer.cpp \
     tiles/tilegenerator.cpp \
-    tiles/tilesystem.cpp
+    tiles/tilesystem.cpp \
+    depthrenderable.cpp
 
 INCLUDEPATH += $$PWD/../LibPng
 DEPENDPATH += $$PWD/../LibPng

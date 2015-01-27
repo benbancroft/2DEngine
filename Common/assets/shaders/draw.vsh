@@ -1,3 +1,7 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
+
 attribute vec2 a_verticies;
 
 varying vec2 vTextureCoord;
@@ -64,5 +68,5 @@ void main() {
                 dimension = (viewportDim.xy / sceneDim.xy)*dimension.xy;
         }
 
-        gl_Position = vec4(toScreenSpace(position + a_verticies*dimension), depth, 1);
+        gl_Position = vec4(toScreenSpace(position + a_verticies*dimension), 0, 1);
 }

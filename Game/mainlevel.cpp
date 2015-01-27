@@ -7,6 +7,7 @@ void MainLevel::Tick(Core::Engine* engine){
 }
 
 void MainLevel::Render(Core::Render* render){
+
     tileSystem->Render(render);
     Level::Render(render);
     //DEBUG_LOG_WRITE_V("Tick", "Ticking main level");
@@ -14,11 +15,15 @@ void MainLevel::Render(Core::Render* render){
 
 void MainLevel::Loaded(Core::Engine *engine){
 
-    const std::string test = "textures/tilesheet";
-    mainLayer = tileSystem->AddLayer(new Core::TileLayer(test));
-    mainLayer->AddTile(Maths::Vector2<int>(0,0), Maths::Vector2<int>(7,0));
-    mainLayer->AddTile(Maths::Vector2<int>(7,7), Maths::Vector2<int>(0,7));
-    mainLayer->AddTile(Maths::Vector2<int>(11,11), Maths::Vector2<int>(0,7));
+    tileSystem->RegisterBlockType(1, new Core::Block({{8, Maths::Vector2<int>(1,0)}, {6, Maths::Vector2<int>(4,1)}}));
+    //tileSystem->SetBlock(Maths::Vector2<int>(1,1), 1);
+    //tileSystem->SetBlock(Maths::Vector2<int>(11,11), 1);
+    for (int x = 0; x < 10; x++){
+        for (int y = 0; y < 20; y++){
+            tileSystem->SetBlock(Maths::Vector2<int>(x,y), 1);
+        }
+    }
+    tileSystem->CommitTiles();
 
-    mainLayer->CommitTiles();
+    Level::Loaded(engine);
 }

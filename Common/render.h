@@ -93,7 +93,7 @@ namespace Core
 
         virtual void Draw(Maths::Vector2<float> position);
 
-        virtual void DrawTileChunk(Maths::Vector2<int> location, std::string tileSheet, int squareSize, int chunkSize, GLuint chunkData);
+        virtual void DrawTileChunk(Maths::Vector2<int> location, std::string tileSheet, int squareSize, int chunkSize, GLuint chunkData, int depth);
 
         Maths::Vector2<int> GetResolution();
 

@@ -23,12 +23,16 @@ void main() {
                 }
         }
     if (!u_useColour){
-        gl_FragColor = texture2D(u_textureSample, vTextureCoord);
+        vec4 colour = texture2D(u_textureSample, vTextureCoord);
         if (u_useColourBlend){
-                gl_FragColor *= u_colour;
+                colour *= u_colour;
         }
+        /*if (colour.a == 0.0) discard;
+        else*/
+        gl_FragColor = colour;
     }else{
         gl_FragColor = u_colour;
-        }
+    }
+
     //gl_FragColor = vDebugColour;
 }

@@ -10,6 +10,8 @@ TARGET = Game
 TEMPLATE = lib
 CONFIG += staticlib
 
+CONFIG += c++11
+
 SOURCES += game.cpp \
     mainlevel.cpp \
     testentity.cpp

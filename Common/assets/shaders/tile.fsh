@@ -46,11 +46,16 @@ void main() {
 
     vec2 spriteOffset = (tile.xy * 256.0) * (u_tileSheetSquareSize + u_mapSeperationSize.xy);
     vec2 spriteCoord = mod(vTextureCoord * u_mapChunkSize * u_mapSquareSize, u_mapSquareSize)/u_mapSquareSize*u_tileSheetSquareSize;
-    gl_FragColor = texture2D(u_textureSample, (spriteOffset + spriteCoord) / (u_tileSheetSize.xy));
-    //gl_FragColor = tile;
+    vec4 colour = texture2D(u_textureSample, (spriteOffset + spriteCoord) / (u_tileSheetSize.xy));
+
+    /*if (colour.a == 0.0 ) discard;
+    else*/
+    gl_FragColor = colour;
     //gl_FragColor *= vDebugColour;
 
     //gl_FragColor = vec4(0.0,1.0,1.0,1.0);
     //gl_FragColor = vDebugColour;
+
+    //if (gl_FragColor.a < 1.0) discard;
 
 }

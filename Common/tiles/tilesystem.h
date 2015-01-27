@@ -7,31 +7,42 @@
 namespace Core {
 
     struct Block{
-        Block(std::map<int, Maths::Vector2<int>> blockLayers){
+        Block(std::map<int, Maths::Vector2<int> > blockLayers){
             this->blockLayers = blockLayers;
         }
 
-        std::map<int, Maths::Vector2<int>> blockLayers;
+        std::map<int, Maths::Vector2<int> > blockLayers;
     };
 
-    class TileLayer;
+    class TileChunk;
 
     class TileSystem
     {
-        int tileSize;
-        int chunkSize;
         Level* level;
-        std::vector<TileLayer*> tileLayers;
-        std::map<int, Block> blocks;
+        std::map<Maths::Vector2<int>, TileChunk*> tileChunks;
+        std::map<int, Block*> blocks;
         TileGenerator* generator = NULL;
 
     public:
-        TileSystem(Level* level, TileGenerator* generator, int tileSize, int chunkSize);
+        int tileSize;
+        int chunkSize;
+        std::string tilesheetUrl;
+
+        TileSystem(Level* level, TileGenerator* generator, std::string tilesheetUrl, int tileSize, int chunkSize);
+
+        Level* GetLevel(){
+            return this->level;
+        }
+
+        Block* GetBlockById(int blockId);
 
         void Tick();
         void Render(Core::Render* render);
-        void AddTile(TileLayer* layer, Maths::Vector2<int> position, Maths::Vector2<int> tile);
-        TileLayer *AddLayer(TileLayer* layer);
+        void SetBlock(Maths::Vector2<int> position, int blockId);
+        void RegisterBlockType(int blockId, Block* block);
+
+        void CommitTiles();
+
 
         void GetGenerationPercentage();
         void GetGenerationMessage();

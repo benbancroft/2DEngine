@@ -20,7 +20,7 @@ INCLUDEPATH += $$PWD/../Game
 DEPENDPATH += $$PWD/../Game
 
 emscripten{
-    TARGET = Desktop.html
+    TARGET = index.html
 
     QMAKE_LFLAGS += -s USE_GLFW=3 --embed-file assets@/
 

@@ -2,8 +2,8 @@
 
 namespace Core {
 
-    Entity::Entity()
-    {
+    void Entity::addRenderable(Level *level){
+        level->AddRenderable(this);
     }
 
     void Entity::Loaded(Engine* engine){
@@ -14,6 +14,7 @@ namespace Core {
     }
 
     void Entity::Tick(Engine* engine){
+        //test();
         //DEBUG_LOG_WRITE_V("Tick", "Ticking Entity");
     }
 
@@ -21,6 +22,7 @@ namespace Core {
         //DEBUG_LOG_WRITE_V("Render", "Rendering Entity");
 
         render->SetShader("shaders/draw", ShaderType::Draw);
+        render->SetDepth(depth, true);
         render->SetColour(Maths::Vector4<float>(1.0,1.0,0.0,1.0));
         render->SetUseColour(true);
         render->SetDimensions(Maths::Vector2<float>(20,20));

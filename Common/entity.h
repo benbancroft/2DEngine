@@ -2,13 +2,17 @@
 #define ENTITY_H
 
 #include "engine.h"
+#include "level.h"
 #include "viewport.h"
+#include "depthrenderable.h"
 #include "platform/platform_log.h"
 
 namespace Core
 {
     class Engine;
     class Viewport;
+    //class Level;
+    //class DepthRenderable;
 
     struct AlarmData{
         int startTime = 0;
@@ -21,15 +25,23 @@ namespace Core
         }
     };
 
-    class Entity
+    class Entity : public DepthRenderable
     {
+        void addRenderable(Level* level);
     public:
-        Entity();
+        virtual void test(){
+            DEBUG_LOG_WRITE_D("TST", "base");
+        }
+
+        Entity(Engine* engine, Level* level) : DepthRenderable(7){
+            //registerEntity(self, engine);
+            addRenderable(level);
+        }
 
         void SetAlarm(int index, int ticks);
         void DirectTowards(Maths::Vector2<double> position);
 
-        virtual void Loaded(Engine* engine);
+        virtual void Loaded(Engine *engine);
         virtual void Tick(Engine *engine);
         virtual void Render(Core::Render *render);
         virtual void Alarm(int index);
@@ -45,8 +57,6 @@ namespace Core
         double lastY = 0.0;
         double direction = 0.0;
         double speed = 0.0;
-
-        int depth = 1;
 
         std::string spriteSheet = "";
         int spriteIndex = 0;

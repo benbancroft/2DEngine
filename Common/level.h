@@ -7,6 +7,7 @@
 #include "engine.h"
 #include "viewport.h"
 #include "entity.h"
+#include "depthrenderable.h"
 
 #include <algorithm>
 
@@ -18,12 +19,14 @@ namespace Core
     class Engine;
     class Viewport;
     class Entity;
+    class DepthRenderable;
 
     class Level
     {
         //Engine* engine;
 
         std::vector<Entity*> entities;
+        std::vector<DepthRenderable*> renderables;
     public:
         int width = 0;
         int height = 0;
@@ -37,7 +40,8 @@ namespace Core
             this->engine = engine;
         }*/
 
-        void AddEntity(Entity* entity, Engine* engine);
+        void AddEntity(Entity* entity, Engine *engine);
+        void AddRenderable(DepthRenderable* renderable);
 
         virtual void Loaded(Engine *engine);
         virtual void Tick(Engine *engine);

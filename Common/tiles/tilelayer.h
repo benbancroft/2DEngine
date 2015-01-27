@@ -10,51 +10,51 @@
 #include "engine.h"
 
 #include "tilesystem.h"
+#include "depthrenderable.h"
 
 namespace Core {
 
     class Render;
+    class TileLayer;
+    class TileSystem;
 
     class TileChunk
     {
-        std::map<Maths::Vector2<int>, Maths::Vector2<int> > tileMap;
-        std::string tilesheetUrl;
-        int chunkSize;
-        int tileSize;
-        GLuint chunkDataTexture;
+        std::map<int, TileLayer*> tileLayers;
+        std::map<Maths::Vector2<int>, int> blocks;
     public:
-        TileChunk(std::string tilesheetUrl, int chunkSize, int tileSize){
-            this->tilesheetUrl = tilesheetUrl;
-            this->chunkSize = chunkSize;
-            this->tileSize = tileSize;
+        TileSystem* tileSystem;
+        Maths::Vector2<int> location;
+
+        TileChunk(TileSystem* tileSystem, Maths::Vector2<int> location){
+            this->tileSystem = tileSystem;
+            this->location = location;
         }
 
-        void Render(Maths::Vector2<int> location, Core::Render* render);
+        //void Render(Maths::Vector2<int> location, Core::Render* render);
 
-        void AddTile(Maths::Vector2<int> position, Maths::Vector2<int> tile);
+        void SetBlock(Maths::Vector2<int> position, int blockId);
+        void RemoveBlock(Maths::Vector2<int> position);
         void CommitTiles();
     };
 
-    class TileLayer
+    class TileLayer : public DepthRenderable
     {
-        std::string tilesheetUrl;
-        std::map<Maths::Vector2<int>, TileChunk*> chunkMap;
-        int tileSize;
-        int chunkSize;
+        std::map<Maths::Vector2<int>, Maths::Vector2<int> > tileMap;
+        void addRenderable();
     public:
-        TileLayer(const std::string& tilesheetUrl);
-        void SetLayerInfo(int tileSize, int chunkSize){
-            this->tileSize = tileSize;
-            this->chunkSize = chunkSize;
+        int numTiles;
+        GLuint layerDataTexture;
+        TileChunk* chunk;
+
+        TileLayer(const int depth, TileChunk* chunk): DepthRenderable(depth){
+            this->chunk = chunk;
+            addRenderable();
         }
 
         void Render(Core::Render* render);
 
-        void CommitTiles();
-
         void AddTile(Maths::Vector2<int> position, Maths::Vector2<int> tile);
-
-        void ClearTiles();
     };
 
 }

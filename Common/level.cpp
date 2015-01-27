@@ -9,6 +9,11 @@ namespace Core {
         entity->Loaded(engine);
     }
 
+    void Level::AddRenderable(DepthRenderable* renderable){
+        auto it = std::lower_bound(renderables.begin(), renderables.end(), renderable, [](DepthRenderable* a, DepthRenderable* b){ return a->depth >= b->depth; });
+        renderables.insert(it, renderable);
+    }
+
     void Level::Tick(Engine* engine){
 
         auto entityMoveUpdate = [](Entity* entity){
@@ -45,11 +50,13 @@ namespace Core {
     }
 
     void Level::Loaded(Engine* engine){
-        std::for_each(entities.begin(), entities.end(), [engine](Entity* entity){ entity->Loaded(engine); });
+        //std::sort(renderables.begin(), renderables.end(), [](DepthRenderable* a, DepthRenderable* b){ return a->depth >= b->depth; });
+        //std::for_each(entities.begin(), entities.end(), [engine](Entity* entity){ entity->Loaded(engine); });
     }
 
     void Level::Render(Core::Render *render){
-        std::for_each(entities.begin(), entities.end(), [render](Entity* entity){ entity->Render(render); });
+        //std::for_each(entities.begin(), entities.end(), [render](Entity* entity){ entity->Render(render); });
+        std::for_each(renderables.begin(), renderables.end(), [render](DepthRenderable* renderable){ renderable->Render(render); });
     }
 
     void Level::OnTouchPress(double x, double y){
