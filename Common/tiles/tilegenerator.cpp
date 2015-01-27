@@ -2,24 +2,36 @@
 
 namespace Core {
 
-    TileGenerator::TileGenerator()
-    {
-    }
-
-    void TileGenerator::Tick(){
+    void TileGenerator::Tick(Engine *engine){
 
     }
 
-    void TileGenerator::GetGenerationPercentage(){
+    void TileGenerator::Loaded(Engine* engine){
 
     }
 
-    void TileGenerator::GetGenerationMessage(){
+    double TileGenerator::GetGenerationPercentage(){
+        return percentage;
+    }
 
+    std::string TileGenerator::GetGenerationMessage(){
+        return generationMessage;
+    }
+
+    bool TileGenerator::IsComplete(){
+        return isComplete;
+    }
+
+    void TileGenerator::SetGenerationMessage(std::string message){
+        this->generationMessage = message;
     }
 
     void TileGenerator::SetLevel(Level* level){
         this->level = level;
+    }
+
+    void TileGenerator::SetComplete(){
+        this->isComplete = true;
     }
 
 }

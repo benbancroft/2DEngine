@@ -25,6 +25,9 @@ namespace Core
     class Engine : public Render
     {
     private:
+        std::map<int, std::default_random_engine*> randomGenerators;
+        std::default_random_engine* generator;
+        int currentSeed;
         bool isLoaded = false;
         bool isLoading = false;
         bool beenLoaded = false;
@@ -45,6 +48,8 @@ namespace Core
         virtual void Loaded();
         virtual void Render();
         virtual void Tick();
+
+        void SetSeed(int seed);
 
         virtual void OnTouchPress(double x, double y);
         virtual void OnTouchDrag(double x, double y);

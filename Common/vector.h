@@ -43,15 +43,15 @@ namespace Maths
                 return false;
             return y < pt.y;
         }
-        bool operator+(const Vector2& pt) {
+        Vector2<Type> operator+(const Vector2& pt) {
             x += pt.x;
             y += pt.y;
-            return true;
+            return *this;
         }
-        bool operator-(const Vector2& pt) {
+        Vector2<Type> operator-(const Vector2& pt) {
             x -= pt.x;
             y -= pt.y;
-            return true;
+            return *this;
         }
 
         Vector2<Type> operator*(const int val) {

@@ -10,6 +10,7 @@ namespace Core{
         this->tilesheetUrl = tilesheetUrl;
 
         generator->SetLevel(level);
+        generator->SetTileSystem(this);
 
         //if level has bounds check to see if boundx,y mod chunksize is zero
         //attach generator...
@@ -21,9 +22,15 @@ namespace Core{
         }
     }
 
-    void TileSystem::Tick(){
+    void TileSystem::Loaded(Engine* engine){
         if (generator != NULL){
-            generator->Tick();
+            generator->Loaded(engine);
+        }
+    }
+
+    void TileSystem::Tick(Engine* engine){
+        if (generator != NULL){
+            generator->Tick(engine);
         }
     }
 
@@ -36,21 +43,55 @@ namespace Core{
             return NULL;
     }
 
-
-    void TileSystem::SetBlock(Maths::Vector2<int> position, int blockId){
-        auto chunkPosition = Maths::Vector2<int>(position.GetX(), position.GetY())/chunkSize;
+    TileChunk* TileSystem::GetChunk(Maths::Vector2<int> chunkPosition, bool create){
         auto chunkIter = tileChunks.find(chunkPosition);
-        TileChunk* chunk;
+        TileChunk* chunk = NULL;
         if (chunkIter != tileChunks.end()) chunk = chunkIter->second;
-        else{
+        else if (create){
             chunk = new TileChunk(this, chunkPosition);
             this->tileChunks[chunkPosition] = chunk;
         }
+        return chunk;
+    }
+
+
+    void TileSystem::SetBlock(Maths::Vector2<int> position, int blockId){
+        auto chunkPosition = Maths::Vector2<int>(position.GetX(), position.GetY())/chunkSize;
+
+        auto chunk = GetChunk(chunkPosition);
+
         chunk->SetBlock(position%chunkSize, blockId);
+    }
+
+    int TileSystem::GetBlock(Maths::Vector2<int> position){
+        auto chunkPosition = Maths::Vector2<int>(position.GetX(), position.GetY())/chunkSize;
+        auto chunkIter = tileChunks.find(chunkPosition);
+        if (chunkIter != tileChunks.end()){
+            TileChunk* chunk = chunkIter->second;
+            return chunk->GetBlock(position%chunkSize);
+        }else{
+            return 0;
+        }
     }
 
     void TileSystem::RegisterBlockType(int blockId, Block* block){
         blocks[blockId] = block;
+    }
+
+    void TileSystem::CreateTile(int depth, Maths::Vector2<int> position, Maths::Vector2<int> tile, bool createChunk){
+        auto chunkPosition = Maths::Vector2<int>(position.GetX(), position.GetY())/chunkSize;
+        TileChunk* chunk = GetChunk(chunkPosition, createChunk);
+        if (chunk != NULL){
+            chunk->CreateTile(depth,position%chunkSize,tile);
+        }
+    }
+
+    void TileSystem::CreateTiles(){
+
+        for (const auto& kv : tileChunks) {
+            TileChunk* chunk = kv.second;
+            if (chunk->NeedsUpdate()) chunk->CreateTiles();
+        }
     }
 
     void TileSystem::CommitTiles(){

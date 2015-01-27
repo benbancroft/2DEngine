@@ -22,6 +22,7 @@ namespace Core {
     {
         std::map<int, TileLayer*> tileLayers;
         std::map<Maths::Vector2<int>, int> blocks;
+        bool hasChanged = false;
     public:
         TileSystem* tileSystem;
         Maths::Vector2<int> location;
@@ -33,9 +34,19 @@ namespace Core {
 
         //void Render(Maths::Vector2<int> location, Core::Render* render);
 
+        bool NeedsUpdate(){
+            return hasChanged;
+        }
+
+        void CreateTiles();
+        void CreateTile(int depth, Maths::Vector2<int> position, Maths::Vector2<int> tile);
+
         void SetBlock(Maths::Vector2<int> position, int blockId);
+        int GetBlock(Maths::Vector2<int> position);
         void RemoveBlock(Maths::Vector2<int> position);
         void CommitTiles();
+
+        TileLayer* GetLayer(int depth, bool create = true);
     };
 
     class TileLayer : public DepthRenderable
@@ -54,7 +65,9 @@ namespace Core {
 
         void Render(Core::Render* render);
 
-        void AddTile(Maths::Vector2<int> position, Maths::Vector2<int> tile);
+        void CreateTile(Maths::Vector2<int> position, Maths::Vector2<int> tile);
+
+        bool GetTile(Maths::Vector2<int> position, Maths::Vector2<int>* output);
     };
 
 }

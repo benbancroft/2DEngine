@@ -6,6 +6,28 @@ namespace Core {
 
     }
 
+    void Engine::SetSeed(int seed){
+        if (randomGenerators.find(seed) != randomGenerators.end()){
+            generator = randomGenerators[seed];
+        }else{
+            generator = new std::default_random_engine();
+            generator->seed(seed);
+            randomGenerators[seed] = generator;
+        }
+        currentSeed = seed;
+    }
+
+    /*int Engine::RandomInteger(int min, int max, [bool old = false]){
+        if (old == true && randomNumbers.containsKey(currentSeed)){
+            return randomNumbers[currentSeed];
+        }else{
+            int num = min + random.nextInt((max - min).floor());
+            randomNumbers[currentSeed] = num;
+
+            return num;
+        }
+    }*/
+
     void Engine::setLoading(bool state){
         if (state == true){
             isLoaded = false;
