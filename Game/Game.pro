@@ -14,13 +14,13 @@ CONFIG += c++11
 
 SOURCES += game.cpp \
     mainlevel.cpp \
-    testentity.cpp \
-    mazegenerator.cpp
+    mazegenerator.cpp \
+    player.cpp
 
 HEADERS += game.h \
     mainlevel.h \
-    testentity.h \
-    mazegenerator.h
+    mazegenerator.h \
+    player.h
 
 INCLUDEPATH += $$PWD/../Common
 DEPENDPATH += $$PWD/../Common

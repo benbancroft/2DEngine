@@ -16,9 +16,15 @@ namespace Core {
 
     void Level::Tick(Engine* engine){
 
-        auto entityMoveUpdate = [](Entity* entity){
+        auto entityMoveUpdate = [this, engine](Entity* entity){
+
+            entity->lastX = entity->x;
+            entity->lastY = entity->y;
+
             entity->x += cos(entity->direction) * entity->speed;
             entity->y -= sin(entity->direction) * entity->speed;
+
+            if (this->tileSystem != NULL) this->tileSystem->ResolveCollision(engine, entity);
 
             std::for_each(entity->viewportsFollowing.begin(), entity->viewportsFollowing.end(), [entity](Viewport* viewport){
                 viewport->FollowEntity(entity);

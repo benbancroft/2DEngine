@@ -37,10 +37,12 @@ namespace Core {
     };
 
     struct Block{
-        Block(std::map<int, BlockLayer > blockLayers){
+        Block(std::map<int, BlockLayer > blockLayers, bool isSolid){
             this->blockLayers = blockLayers;
+            this->isSolid = isSolid;
         }
 
+        bool isSolid;
         std::map<int, BlockLayer > blockLayers;
     };
 
@@ -64,6 +66,8 @@ namespace Core {
         Level* GetLevel(){
             return this->level;
         }
+
+        bool ResolveCollision(Engine* engine, Entity* entity);
 
         Block* GetBlockById(int blockId);
 

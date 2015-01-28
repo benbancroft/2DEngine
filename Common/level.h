@@ -12,6 +12,7 @@
 #include <algorithm>
 
 #include "platform/platform_log.h"
+#include "tiles/tilesystem.h"
 
 namespace Core
 {
@@ -20,6 +21,7 @@ namespace Core
     class Viewport;
     class Entity;
     class DepthRenderable;
+    class TileSystem;
 
     class Level
     {
@@ -27,6 +29,8 @@ namespace Core
 
         std::vector<Entity*> entities;
         std::vector<DepthRenderable*> renderables;
+    protected:
+        Core::TileSystem* tileSystem = NULL;
     public:
         int width = 0;
         int height = 0;
@@ -39,6 +43,11 @@ namespace Core
         /*void SetEngine(Engine* engine){
             this->engine = engine;
         }*/
+
+
+        void SetTileSystem(TileSystem* tileSystem){
+            this->tileSystem = tileSystem;
+        }
 
         void AddEntity(Entity* entity, Engine *engine);
         void AddRenderable(DepthRenderable* renderable);

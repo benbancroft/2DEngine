@@ -4,7 +4,7 @@
 #include "entity.h"
 #include "engine.h"
 
-class TestEntity : public Core::Entity
+class Player : public Core::Entity
 {
     using Core::Entity::Entity;
 
@@ -16,7 +16,7 @@ public:
         DEBUG_LOG_WRITE_D("TST", "derived");
     }
 
-    TestEntity(Core::Engine* engine, Core::Level* level) : Entity(engine, level){
+    Player(Core::Engine* engine, Core::Level* level) : Entity(engine, level){
         //Entity::registerEntity(this, engine);
         level->AddEntity(this, engine);
 

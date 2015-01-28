@@ -30,6 +30,7 @@ namespace Core
         Level* level;
 
         void addRenderable(Level* level);
+
     public:
         std::vector<Viewport*> viewportsFollowing;
 
@@ -47,6 +48,8 @@ namespace Core
         void AddViewportTrack(Viewport* viewport);
         void DirectTowards(Maths::Vector2<double> position);
 
+        void SetPosition(Maths::Vector2<double> position);
+
         virtual void Loaded(Engine *engine);
         virtual void Tick(Engine *engine);
         virtual void Render(Core::Render *render);
@@ -63,6 +66,11 @@ namespace Core
         double lastY = 0.0;
         double direction = 0.0;
         double speed = 0.0;
+
+        double width = 32.0;
+        double height = 32.0;
+
+        bool slides = false;
 
         std::string spriteSheet = "";
         int spriteIndex = 0;

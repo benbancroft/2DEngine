@@ -10,6 +10,10 @@ namespace Core {
 
     }
 
+    void TileGenerator::RegisterBlocks(Engine *engine){
+
+    }
+
     double TileGenerator::GetGenerationPercentage(){
         return percentage;
     }

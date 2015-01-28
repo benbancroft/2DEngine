@@ -6,19 +6,23 @@
 #include "vector.h"
 
 #include "mainlevel.h"
-#include "testentity.h"
+#include "player.h"
 
 Core::Engine* InitialiseGame();
 
 
 class Game : public Core::Engine
 {
-    Core::Level* mainLevel;
+    MainLevel* mainLevel;
     Core::Viewport* mainViewport;
+    Core::TileSystem* tileSystem;
+    MazeGenerator* generator;
+    Player* player = NULL;
 
 public:
-Game();
-void Loaded();
+    Game();
+    void Loaded();
+    void Tick();
 };
 
 #endif // GAME_H

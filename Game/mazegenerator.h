@@ -15,10 +15,23 @@ class MazeGenerator : public Core::TileGenerator
     int tilesWidth = 20;
     int tilesHeight = 20;
 
+    int startHeight = 0;
+    int endHeight = 0;
+
+    Maths::Vector2<double> respawnPoint;
+
     std::vector<int> groups;
 public:
     void Loaded(Core::Engine *engine);
     void Tick(Core::Engine *engine);
+
+    Maths::Vector2<double> GetRespawnPoint(){
+        return this->respawnPoint;
+    }
+
+    void PopulateMaze(Core::TileSystem *tileSystem, Core::Engine *engine, bool spawnTraps, int currentLevel);
+
+    void RegisterBlocks(Core::Engine *engine);
 
     bool IsConnected(){
         return connected;

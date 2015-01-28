@@ -9,6 +9,11 @@ namespace Core {
     void Entity::Loaded(Engine* engine){
     }
 
+    void Entity::SetPosition(Maths::Vector2<double> position){
+        this->x = position.GetX();
+        this->y = position.GetY();
+    }
+
     void Entity::AddViewportTrack(Viewport *viewport){
         if (viewport->level == this->level && std::find(viewportsFollowing.begin(), viewportsFollowing.end(), viewport) == viewportsFollowing.end()){
             viewportsFollowing.push_back(viewport);
@@ -31,7 +36,7 @@ namespace Core {
         render->SetDepth(depth, true);
         render->SetColour(Maths::Vector4<float>(1.0,1.0,0.0,1.0));
         render->SetUseColour(true);
-        render->SetDimensions(Maths::Vector2<float>(20,20));
+        render->SetDimensions(Maths::Vector2<float>(width,height));
         render->Draw(Maths::Vector2<float>(x, y));
     }
 

@@ -1,6 +1,6 @@
-#include "testentity.h"
+#include "player.h"
 
-void TestEntity::Loaded(Core::Engine* engine){
+void Player::Loaded(Core::Engine* engine){
     Entity::Loaded(engine);
 
     Maths::Vector2<int> res = engine->GetResolution();
@@ -12,7 +12,7 @@ void TestEntity::Loaded(Core::Engine* engine){
     //SetAlarm(0, 150);
 }
 
-void TestEntity::Tick(Core::Engine *engine){
+void Player::Tick(Core::Engine *engine){
     Entity::Tick(engine);
 
     if (hasTarget){
@@ -26,18 +26,18 @@ void TestEntity::Tick(Core::Engine *engine){
     }
 }
 
-void TestEntity::Render(Core::Render *render){
+void Player::Render(Core::Render *render){
     Entity::Render(render);
 }
 
-void TestEntity::Alarm(int index){
+void Player::Alarm(int index){
     if (index == 0){
         DEBUG_LOG_WRITE_V("Alarm", "Alarm Entity");
         SetAlarm(0, 150);
     }
 }
 
-void TestEntity::OnTouchPress(double x, double y){
+void Player::OnTouchPress(double x, double y){
 
     speed = 0.5;
 
@@ -53,7 +53,7 @@ void TestEntity::OnTouchPress(double x, double y){
     DEBUG_LOG_PRINT_V("Engine", "press X: %f Y: %f current X: %f Y: %f angle: %f", x, y, this->x, this->y, this->direction);
 }
 
-void TestEntity::OnTouchDrag(double x, double y){
+void Player::OnTouchDrag(double x, double y){
     DEBUG_LOG_WRITE_V("Tick", "Drag again");
     DEBUG_LOG_PRINT_V("Engine", "drag X: %f Y: %f", x, y);
 }

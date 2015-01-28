@@ -35,6 +35,7 @@ namespace Core {
         bool IsComplete();
         virtual void Tick(Engine* engine);
         virtual void Loaded(Engine *engine);
+        virtual void RegisterBlocks(Core::Engine *engine);
         double GetGenerationPercentage();
         void SetGenerationPercentage(double percentage);
         std::string GetGenerationMessage();

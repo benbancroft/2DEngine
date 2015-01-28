@@ -24,8 +24,12 @@ namespace Core{
 
     void TileSystem::Loaded(Engine* engine){
         if (generator != NULL){
+            generator->RegisterBlocks(engine);
             generator->Loaded(engine);
         }
+    }
+
+    bool TileSystem::ResolveCollision(Engine* engine, Entity* entity){
     }
 
     void TileSystem::Tick(Engine* engine){

@@ -4,12 +4,253 @@ int get2DIndex(int x, int y, int width){
     return x*width+y;
 }
 
+void MazeGenerator::RegisterBlocks(Core::Engine* engine){
+
+    Core::TileSystem* tileSystem = GetTileSystem();
+
+    //shadow tile selector
+
+    auto shadowSelector = [](Core::TileSystem* tileSystem, Maths::Vector2<int> loc) -> int {
+        //auto loc = test.Clone();
+        const auto leftBlock = tileSystem->GetBlock(loc+Core::TilePosition::Left);
+        const auto rightBlock = tileSystem->GetBlock(loc+Core::TilePosition::Right);
+        const auto topBlock = tileSystem->GetBlock(loc+Core::TilePosition::Up);
+        const auto bottomBlock = tileSystem->GetBlock(loc+Core::TilePosition::Down);
+        const auto topLeftBlock = tileSystem->GetBlock(loc+Core::TilePosition::Up+Core::TilePosition::Left);
+        const auto topRightBlock = tileSystem->GetBlock(loc+Core::TilePosition::Up+Core::TilePosition::Right);
+        const auto bottomLeftBlock = tileSystem->GetBlock(loc+Core::TilePosition::Down+Core::TilePosition::Left);
+        const auto bottomRightBlock = tileSystem->GetBlock(loc+Core::TilePosition::Down+Core::TilePosition::Right);
+
+        /*if (tileSystem->GetBlock(loc) != 2) return -1;
+        else*/ if (topBlock == 1 && leftBlock == 1) return 4;
+        else if (topBlock == 1 && rightBlock == 1) return 5;
+        else if (bottomBlock == 1 && rightBlock == 1) return 6;
+        else if (leftBlock == 1 && rightBlock == 1) return 7;
+        else if (topBlock == 1) return 2;
+        else if (bottomBlock == 1) return 3;
+        else if (leftBlock == 1) return 0;
+        else if (rightBlock == 1) return 1;
+        else if (topLeftBlock == 1) return 8;
+        else if (topRightBlock == 1) return 9;
+        else if (bottomRightBlock == 1) return 10;
+        else if (bottomLeftBlock == 1) return 11;
+        else return -1;
+    };
+
+    //floor tile randomiser
+
+    auto floorTileSelector = [engine](Core::TileSystem* tileSystem, Maths::Vector2<int> loc){
+        return engine->RandomInteger(0, 3);
+    };
+
+    std::pair<int, Core::BlockLayer > wallBaseInfo = {6, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(0,7) } )};
+    std::pair<int, Core::BlockLayer > wallTopInfo = {5, Core::BlockLayer(Core::TilePosition::Up, { Maths::Vector2<int>(0,6) })};
+
+    //register base wall block
+
+    tileSystem->RegisterBlockType(1, new Core::Block({wallBaseInfo, wallTopInfo}, true));
+
+    //register dart trap block
+
+    tileSystem->RegisterBlockType(5, new Core::Block({wallBaseInfo, wallTopInfo,
+        {4, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(2,7) })}
+    }, true));
+
+    //register floor block
+
+    std::pair<int, Core::BlockLayer > floorLayer = {8, Core::BlockLayer(Core::TilePosition::Centre, {
+                           Maths::Vector2<int>(0,0), Maths::Vector2<int>(1,0), Maths::Vector2<int>(2,0), Maths::Vector2<int>(3,0)
+                       }, floorTileSelector)};
+
+    tileSystem->RegisterBlockType(2, new Core::Block({
+        floorLayer,
+        {7, Core::BlockLayer(Core::TilePosition::Centre, {
+            Maths::Vector2<int>(0,1), Maths::Vector2<int>(1,1), Maths::Vector2<int>(2,1), Maths::Vector2<int>(3,1), Maths::Vector2<int>(4,1), Maths::Vector2<int>(5,1), Maths::Vector2<int>(6,1), Maths::Vector2<int>(7,1), Maths::Vector2<int>(0,2), Maths::Vector2<int>(1,2), Maths::Vector2<int>(2,2), Maths::Vector2<int>(3,2)
+        }, shadowSelector)}}, false));
+
+    //register maze entrance
+
+    tileSystem->RegisterBlockType(3, new Core::Block({floorLayer,
+        {7, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(5,0) })}
+    }, true));
+
+    //register maze exit
+
+    tileSystem->RegisterBlockType(4, new Core::Block({
+        {7, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(4,0) })}
+    }, false));
+
+    //register spike trap
+
+    tileSystem->RegisterBlockType(6, new Core::Block({floorLayer,
+        {7, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(6,0) })}
+    }, false));
+
+    //register chest block
+
+    tileSystem->RegisterBlockType(7, new Core::Block({
+        floorLayer,
+        {7, Core::BlockLayer(Core::TilePosition::Centre, {
+            Maths::Vector2<int>(3,7)
+        })},
+        {4, Core::BlockLayer(Core::TilePosition::Up, {
+            Maths::Vector2<int>(3,6)
+        })}}, true));
+}
+
+void MazeGenerator::PopulateMaze(Core::TileSystem* tileSystem, Core::Engine* engine, bool spawnTraps, int currentLevel){
+
+    int intersections = 10 + (currentLevel-1)*2;;
+
+    if (spawnTraps){
+
+        //Spawn traps
+
+        for (int i = 0; i < 4 + (currentLevel-1)*3; i++){
+
+            int rx = 0;
+            int ry = 0;
+
+            int fitsCriteria = false;
+
+            do
+            {
+                rx = engine->RandomInteger(1, tilesWidth);
+                ry = engine->RandomInteger(1, tilesHeight);
+
+                if (tileSystem->GetBlock(Maths::Vector2<int>(rx, ry)) == 1 && tileSystem->GetBlock(Maths::Vector2<int>(rx, ry+1)) == 2 && tileSystem->GetBlock(Maths::Vector2<int>(rx, ry+4)) == 1) fitsCriteria = true;
+
+            } while(!fitsCriteria);
+
+            tileSystem->SetBlock(Maths::Vector2<int>(rx, ry), 5);
+        }
+
+        for (int i = 0; i < 4 + (currentLevel-1)*3; i++){
+
+            int rx = 0;
+            int ry = 0;
+
+            int fitsCriteria = false;
+
+            do
+            {
+                rx = engine->RandomInteger(1, tilesWidth);
+                ry = engine->RandomInteger(1, tilesHeight);
+
+                if (tileSystem->GetBlock(Maths::Vector2<int>(rx, ry)) == 2) fitsCriteria = true;
+
+            } while(!fitsCriteria);
+
+            tileSystem->SetBlock(Maths::Vector2<int>(rx, ry), 6);
+        }
+
+        //Spawn chests
+
+        std::vector<Maths::Vector2<int> > deadEnds;
+
+        for (int dx = 0; dx < intersections; dx++){
+            for (int dy = 0; dy < intersections; dy++){
+                int ix = 1+dx*(corridoorWidth+1);
+                int iy = 1+dy*(corridoorWidth+1);
+
+                int sidesBlocked = 0;
+                if (tileSystem->GetBlock(Maths::Vector2<int>(ix-1, iy)) == 1) sidesBlocked++;
+                if (tileSystem->GetBlock(Maths::Vector2<int>(ix, iy-1)) == 1) sidesBlocked++;
+                if (tileSystem->GetBlock(Maths::Vector2<int>(ix+3, iy)) == 1) sidesBlocked++;
+                if (tileSystem->GetBlock(Maths::Vector2<int>(ix, iy+3)) == 1) sidesBlocked++;
+
+                if (sidesBlocked == 3 && tileSystem->GetBlock(Maths::Vector2<int>(ix, iy-1)) == 1){
+                    deadEnds.push_back(Maths::Vector2<int>(ix+1,iy));
+                }
+            }
+        }
+
+        int numChests = floor(deadEnds.size()*0.35);
+
+        for (int i = 0; i < numChests; i++){
+            int position = engine->RandomInteger(0, deadEnds.size()-1);
+
+            Maths::Vector2<int> location = deadEnds[position];
+
+            //check if exists?
+
+            tileSystem->SetBlock(location, 7);
+
+            deadEnds.erase(deadEnds.begin() + position);
+        }
+
+        /*for (int i = 0; i < 20; i++){
+
+            int rx = 0;
+            int ry = 0;
+
+            int fitsCriteria = false;
+
+            do
+            {
+                rx = 1+irandom(global.width-1);
+                ry = 1+irandom(global.height-1);
+
+                if (get_block_at(rx, ry) == 0 && get_block_at(rx, ry-1) == 1) fitsCriteria = true;
+
+            } until(fitsCriteria == true);
+
+            global.blocks[rx, ry] = 7;
+        }*/
+
+        //commit_tiles_to_room(global.wallUpperDepth, global.wallLowerDepth, global.bombUpperDepth, global.bombDepth, global.floorDepth, global.chestDepth);
+    }
+
+    //Spawn enemies
+
+    /*int numMonsters = floor(0.1*global.intersections*global.intersections);
+
+    for (int i = 0; i < numMonsters; i++){
+        int rx = 0;
+        int ry = 0;
+
+        int hasLOS = false;
+
+        do
+        {
+            rx = 1+irandom((global.width)/(global.corridoor_width+1)-1)*(global.corridoor_width+1);
+            ry = 1+irandom((global.height)/(global.corridoor_width+1)-1)*(global.corridoor_width+1);
+
+                int returnData = has_line_of_sight_tiles(rx, ry, 1, global.startHeight, false);
+                hasLOS = returnData[0];
+        }
+        until ((hasLOS == false && distance_between_points(rx, ry, 1, global.startHeight) > global.view_distance) || global.inLevel == false)
+
+        int monster = irandom(1);
+        switch (monster){
+            case 0:
+                instance_create(rx*global.block_size, ry*global.block_size, bat);
+                break;
+            case 1:
+                instance_create(rx*global.block_size, ry*global.block_size, spider);
+                break;
+        }
+    }
+
+    //Spawn pickups
+
+    for (int i = 0; i < 2+(currentLevel-1); i++){
+        rx = 1+irandom((global.width)/(global.corridoor_width+1)-1)*(global.corridoor_width+1);
+        ry = 1+irandom((global.height)/(global.corridoor_width+1)-1)*(global.corridoor_width+1);
+
+        instance_create(rx*global.block_size, ry*global.block_size, health_pickup);
+    }*/
+}
+
 void MazeGenerator::Loaded(Core::Engine* engine){
 
     Core::TileSystem* tileSystem = GetTileSystem();
 
     tilesWidth -= (tilesWidth % (corridoorWidth+1))-1;
     tilesHeight -= (tilesHeight % (corridoorWidth+1))-1;
+
+    startHeight = 2+engine->RandomInteger(0, (tilesHeight)/(corridoorWidth+1)-1)*(corridoorWidth+1);
+    endHeight = 2+engine->RandomInteger(0, (tilesHeight)/(corridoorWidth+1)-1)*(corridoorWidth+1);
 
     generateSpeed = ceil(sqrt(tilesWidth*tilesHeight)*0.1);
 
@@ -50,6 +291,11 @@ void MazeGenerator::Loaded(Core::Engine* engine){
             }
         }
     }
+
+    //Spawn entrance and exit
+
+    tileSystem->SetBlock(Maths::Vector2<int>(1, startHeight), 3);
+    tileSystem->SetBlock(Maths::Vector2<int>(tilesWidth-2, endHeight), 4);
 }
 
 void MazeGenerator::Tick(Core::Engine* engine){
@@ -138,14 +384,23 @@ void MazeGenerator::Tick(Core::Engine* engine){
                         }
                     }
 
-                    this->SetGenerationPercentage(std::max((((double)(group-otherGroups)/group)*100), this->GetGenerationPercentage()));
+                    //this->SetGenerationPercentage(std::max((((double)(group-otherGroups)/group)*100), this->GetGenerationPercentage()));
 
                     if (otherGroups == 0) {
                         connected = true;
                         //engine->log("All connected!");
 
+                        PopulateMaze(tileSystem, engine, true, 1);
+
                         tileSystem->CreateTiles();
                         tileSystem->CommitTiles();
+
+                        this->respawnPoint = Maths::Vector2<double>(tileSystem->tileSize*(corridoorWidth/2+1)-16, tileSystem->tileSize*(startHeight+corridoorWidth/2)-16);
+
+                        this->SetComplete();
+
+                        /*auto player = new TestEntity(engine, level);
+                        player->AddViewportTrack(mainViewport);*/
 
                         //mainViewport.Zoom(0.25);
 
