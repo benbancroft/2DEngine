@@ -55,7 +55,9 @@ void TileChunk::SetBlock(Maths::Vector2<int> position, int blockId){
 int TileChunk::GetBlock(Maths::Vector2<int> position){
 
     auto blockIt = blocks.find(position);
-    if (blockIt != blocks.end()) return blockIt->second;
+    if (blockIt != blocks.end()){
+        return blockIt->second;
+    }
     else return 0;
 }
 
@@ -149,13 +151,21 @@ void TileChunk::CreateTiles(){
                 offset = Maths::Vector2<int>(0,1);
                 break;
             }*/
+
+            auto chunkPos = location;
+            auto worldPos = chunkPos*this->tileSystem->chunkSize+position+layerInfo.position;
+
+            int tileIndex = 0;
+            if (layerInfo.predicate != NULL) tileIndex = layerInfo.predicate(this->tileSystem, worldPos);
+
+            if (tileIndex < 0) continue;
+
             if (layerInfo.position == TilePosition::Centre){
-                CreateTile(layerDepth, position, layerInfo.tile);
+                CreateTile(layerDepth, position, layerInfo.tiles[tileIndex]);
             }
             else{
-                auto chunkPos = location;
-                auto worldPos = chunkPos*this->tileSystem->chunkSize+position+layerInfo.position;
-                tileSystem->CreateTile(layerDepth, worldPos, layerInfo.tile);
+                //worldPos = worldPos;
+                tileSystem->CreateTile(layerDepth, worldPos, layerInfo.tiles[tileIndex]);
             }
 
             /*auto it = tileLayers.find(layerDepth);

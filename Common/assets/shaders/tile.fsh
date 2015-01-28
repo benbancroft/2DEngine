@@ -1,6 +1,6 @@
 #ifdef GL_ES
-precision highp float;
-precision mediump int;
+precision mediump float;
+//precision mediump int;
 #endif
 
 varying vec2 vTextureCoord;
@@ -34,9 +34,9 @@ void main() {
 
     vec2 sf = vMapScaleFactor;
 	
-    if(clamp(vTextureCoord, vec2(0.0, 0.0), vec2(1.0, 1.0)) != vTextureCoord) {
+    /*if(clamp(vTextureCoord, vec2(0.0, 0.0), vec2(1.0, 1.0)) != vTextureCoord) {
         discard;
-    }
+    }*/
 	
     vec4 tile = texture2D(u_mapTile, vTextureCoord);
     //tile = vec4(0.875,0.0,1.0,0.0);
@@ -46,16 +46,6 @@ void main() {
 
     vec2 spriteOffset = (tile.xy * 256.0) * (u_tileSheetSquareSize + u_mapSeperationSize.xy);
     vec2 spriteCoord = mod(vTextureCoord * u_mapChunkSize * u_mapSquareSize, u_mapSquareSize)/u_mapSquareSize*u_tileSheetSquareSize;
-    vec4 colour = texture2D(u_textureSample, (spriteOffset + spriteCoord) / (u_tileSheetSize.xy));
-
-    /*if (colour.a == 0.0 ) discard;
-    else*/
-    gl_FragColor = colour;
-    //gl_FragColor *= vDebugColour;
-
-    //gl_FragColor = vec4(0.0,1.0,1.0,1.0);
-    //gl_FragColor = vDebugColour;
-
-    //if (gl_FragColor.a < 1.0) discard;
+    gl_FragColor = texture2D(u_textureSample, (spriteOffset + spriteCoord) / (u_tileSheetSize.xy));
 
 }

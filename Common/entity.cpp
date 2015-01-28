@@ -9,6 +9,12 @@ namespace Core {
     void Entity::Loaded(Engine* engine){
     }
 
+    void Entity::AddViewportTrack(Viewport *viewport){
+        if (viewport->level == this->level && std::find(viewportsFollowing.begin(), viewportsFollowing.end(), viewport) == viewportsFollowing.end()){
+            viewportsFollowing.push_back(viewport);
+        }
+    }
+
     void Entity::DirectTowards(Maths::Vector2<double> position){
         this->direction = -Maths::PI/2 + atan2(position.GetX()-x,position.GetY()-y);
     }

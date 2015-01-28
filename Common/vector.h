@@ -26,6 +26,11 @@ namespace Maths
         Type square() const {
             return x*x + y*y;
         }
+
+        Vector2<Type> Clone() const {
+            return Vector2<Type>(x, y);
+        }
+
         Vector2(const Vector2& source)
             : x(source.x), y(source.y){
         }

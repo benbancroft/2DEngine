@@ -19,6 +19,10 @@ namespace Core {
         auto entityMoveUpdate = [](Entity* entity){
             entity->x += cos(entity->direction) * entity->speed;
             entity->y -= sin(entity->direction) * entity->speed;
+
+            std::for_each(entity->viewportsFollowing.begin(), entity->viewportsFollowing.end(), [entity](Viewport* viewport){
+                viewport->FollowEntity(entity);
+            });
         };
 
         auto entityAlarmUpdate = [](Entity* entity){

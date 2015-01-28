@@ -11,7 +11,7 @@ namespace Core
 {
     class Engine;
     class Viewport;
-    //class Level;
+    class Level;
     //class DepthRenderable;
 
     struct AlarmData{
@@ -27,18 +27,24 @@ namespace Core
 
     class Entity : public DepthRenderable
     {
+        Level* level;
+
         void addRenderable(Level* level);
     public:
+        std::vector<Viewport*> viewportsFollowing;
+
         virtual void test(){
             DEBUG_LOG_WRITE_D("TST", "base");
         }
 
         Entity(Engine* engine, Level* level) : DepthRenderable(7){
             //registerEntity(self, engine);
+            this->level = level;
             addRenderable(level);
         }
 
         void SetAlarm(int index, int ticks);
+        void AddViewportTrack(Viewport* viewport);
         void DirectTowards(Maths::Vector2<double> position);
 
         virtual void Loaded(Engine *engine);

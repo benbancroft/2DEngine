@@ -25,8 +25,8 @@ namespace Core
     class Engine : public Render
     {
     private:
-        std::map<int, std::default_random_engine*> randomGenerators;
-        std::default_random_engine* generator;
+        /*std::map<int, std::default_random_engine*> randomGenerators;
+        std::default_random_engine* generator;*/
         int currentSeed;
         bool isLoaded = false;
         bool isLoading = false;

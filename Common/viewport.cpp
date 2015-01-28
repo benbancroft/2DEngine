@@ -24,10 +24,16 @@ namespace Core {
         render->SetUseViewport(false);
     }
 
+    void Viewport::FollowEntity(Entity* entity){
+
+        levelX = this->levelWidth-entity->x;
+        levelY = this->levelHeight-entity->y;
+    }
+
     void touchHandle(Viewport* viewport, double x, double y, void (Level::*func)(double, double)){
         if (x >= viewport->x && y >= viewport->y && x <= viewport->x+viewport->width && y <= viewport->y+viewport->height){
-            x = (x - viewport->x) / viewport->width * viewport->levelWidth;
-            y = (y - viewport->y) / viewport->height * viewport->levelHeight;
+            x = ((x - viewport->x) / viewport->width) * viewport->levelWidth - viewport->levelX + viewport->levelWidth/2;
+            y = ((y - viewport->y) / viewport->height) * viewport->levelHeight - viewport->levelY + viewport->levelHeight/2;
 
             (viewport->level->*func)(x, y);
         }

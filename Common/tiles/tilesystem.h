@@ -1,6 +1,8 @@
 #ifndef TILESYSTEM_H
 #define TILESYSTEM_H
 
+#include <functional>
+
 #include "tilelayer.h"
 #include "tilegenerator.h"
 
@@ -12,17 +14,26 @@ namespace Core {
 
         static const Maths::Vector2<int> Centre(0,0);
         static const Maths::Vector2<int> Up(0,-1);
+        static const Maths::Vector2<int> Down(0,1);
+        static const Maths::Vector2<int> Left(-1,0);
+        static const Maths::Vector2<int> Right(1,0);
+        static const Maths::Vector2<int> DownLeft(-1,1);
+        static const Maths::Vector2<int> DownRight(1,1);
+        static const Maths::Vector2<int> UpLeft(-1,-1);
+        static const Maths::Vector2<int> UpRight(1,-1);
 
     }
 
     struct BlockLayer{
-        BlockLayer(Maths::Vector2<int> position, Maths::Vector2<int> tile){
+        BlockLayer(Maths::Vector2<int> position, std::vector<Maths::Vector2<int> > tiles, std::function<int(TileSystem*, Maths::Vector2<int>)> predicate = NULL){
             this->position = position;
-            this->tile = tile;
+            this->tiles = tiles;
+            this->predicate = predicate;
         }
 
         Maths::Vector2<int> position;
-        Maths::Vector2<int> tile;
+        std::vector<Maths::Vector2<int> > tiles;
+        std::function<int(TileSystem*, Maths::Vector2<int>)> predicate;
     };
 
     struct Block{

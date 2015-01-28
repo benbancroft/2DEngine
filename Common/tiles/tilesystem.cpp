@@ -56,7 +56,7 @@ namespace Core{
 
 
     void TileSystem::SetBlock(Maths::Vector2<int> position, int blockId){
-        auto chunkPosition = Maths::Vector2<int>(position.GetX(), position.GetY())/chunkSize;
+        auto chunkPosition = position.Clone()/chunkSize;
 
         auto chunk = GetChunk(chunkPosition);
 
@@ -64,10 +64,11 @@ namespace Core{
     }
 
     int TileSystem::GetBlock(Maths::Vector2<int> position){
-        auto chunkPosition = Maths::Vector2<int>(position.GetX(), position.GetY())/chunkSize;
-        auto chunkIter = tileChunks.find(chunkPosition);
-        if (chunkIter != tileChunks.end()){
-            TileChunk* chunk = chunkIter->second;
+        auto chunkPosition = position.Clone()/chunkSize;
+
+        auto chunk = GetChunk(chunkPosition, false);
+
+        if (chunk != NULL){
             return chunk->GetBlock(position%chunkSize);
         }else{
             return 0;

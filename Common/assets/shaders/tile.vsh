@@ -1,6 +1,6 @@
 #ifdef GL_ES
-precision highp float;
-precision mediump int;
+precision mediump float;
+//precision mediump int;
 #endif
 
 attribute vec2 a_verticies;

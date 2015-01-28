@@ -9,6 +9,7 @@ namespace Core {
 
     class Level;
     class Engine;
+    class Entity;
 
     class Viewport
     {
@@ -27,6 +28,8 @@ namespace Core {
 
         Viewport(Level* level, double x, double y, int width, int height, double levelX, double levelY, int levelWidth, int levelHeight);
         void Render(Core::Render* render);
+
+        void FollowEntity(Entity* entity);
 
         virtual void OnTouchPress(double x, double y);
         virtual void OnTouchDrag(double x, double y);

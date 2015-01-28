@@ -72,7 +72,7 @@ void MazeGenerator::Loaded(Core::Engine* engine){
 
 void MazeGenerator::Tick(Core::Engine* engine){
     if (connected == false){
-        engine->SetSeed(seed);
+        //engine->SetSeed(seed);
 
         /*int rx = 1+engine->RandomInteger(0, (tilesWidth)~/(corridoorWidth+1))*(corridoorWidth+1);
         int ry = 1+engine->RandomInteger(0, (tilesHeight)~/(corridoorWidth+1))*(corridoorWidth+1);*/

@@ -6,7 +6,7 @@ namespace Core {
 
     }
 
-    void Engine::SetSeed(int seed){
+    /*void Engine::SetSeed(int seed){
         if (randomGenerators.find(seed) != randomGenerators.end()){
             generator = randomGenerators[seed];
         }else{
@@ -15,7 +15,7 @@ namespace Core {
             randomGenerators[seed] = generator;
         }
         currentSeed = seed;
-    }
+    }*/
 
     /*int Engine::RandomInteger(int min, int max, [bool old = false]){
         if (old == true && randomNumbers.containsKey(currentSeed)){
