@@ -36,6 +36,7 @@ namespace Core {
         virtual void Tick(Engine* engine);
         virtual void Loaded(Engine *engine);
         double GetGenerationPercentage();
+        void SetGenerationPercentage(double percentage);
         std::string GetGenerationMessage();
 
         TileSystem* GetTileSystem(){

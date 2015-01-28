@@ -14,6 +14,10 @@ namespace Core {
         return percentage;
     }
 
+    void TileGenerator::SetGenerationPercentage(double percentage){
+        this->percentage = percentage;
+    }
+
     std::string TileGenerator::GetGenerationMessage(){
         return generationMessage;
     }

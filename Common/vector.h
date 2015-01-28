@@ -49,9 +49,11 @@ namespace Maths
             return y < pt.y;
         }
         Vector2<Type> operator+(const Vector2& pt) {
-            x += pt.x;
+
+            return Vector2<Type>(x+pt.x, y+pt.y);
+            /*x += pt.x;
             y += pt.y;
-            return *this;
+            return *this;*/
         }
         Vector2<Type> operator-(const Vector2& pt) {
             x -= pt.x;

@@ -16,14 +16,15 @@ void MainLevel::Render(Core::Render* render){
 void MainLevel::Loaded(Core::Engine *engine){
 
     auto shadowSelector = [](Core::TileSystem* tileSystem, Maths::Vector2<int> loc) -> int {
-        const auto leftBlock = tileSystem->GetBlock(loc.Clone()+Core::TilePosition::Left);
-        const auto rightBlock = tileSystem->GetBlock(loc.Clone()+Core::TilePosition::Right);
-        const auto topBlock = tileSystem->GetBlock(loc.Clone()+Core::TilePosition::Up);
-        const auto bottomBlock = tileSystem->GetBlock(loc.Clone()+Core::TilePosition::Down);
-        const auto topLeftBlock = tileSystem->GetBlock(loc.Clone()+Core::TilePosition::Up+Core::TilePosition::Left);
-        const auto topRightBlock = tileSystem->GetBlock(loc.Clone()+Core::TilePosition::Up+Core::TilePosition::Right);
-        const auto bottomLeftBlock = tileSystem->GetBlock(loc.Clone()+Core::TilePosition::Down+Core::TilePosition::Left);
-        const auto bottomRightBlock = tileSystem->GetBlock(loc.Clone()+Core::TilePosition::Down+Core::TilePosition::Right);
+        //auto loc = test.Clone();
+        const auto leftBlock = tileSystem->GetBlock(loc+Core::TilePosition::Left);
+        const auto rightBlock = tileSystem->GetBlock(loc+Core::TilePosition::Right);
+        const auto topBlock = tileSystem->GetBlock(loc+Core::TilePosition::Up);
+        const auto bottomBlock = tileSystem->GetBlock(loc+Core::TilePosition::Down);
+        const auto topLeftBlock = tileSystem->GetBlock(loc+Core::TilePosition::Up+Core::TilePosition::Left);
+        const auto topRightBlock = tileSystem->GetBlock(loc+Core::TilePosition::Up+Core::TilePosition::Right);
+        const auto bottomLeftBlock = tileSystem->GetBlock(loc+Core::TilePosition::Down+Core::TilePosition::Left);
+        const auto bottomRightBlock = tileSystem->GetBlock(loc+Core::TilePosition::Down+Core::TilePosition::Right);
 
         /*if (tileSystem->GetBlock(loc) != 2) return -1;
         else*/ if (topBlock == 1 && leftBlock == 1) return 4;
@@ -41,17 +42,22 @@ void MainLevel::Loaded(Core::Engine *engine){
         else return -1;
     };
 
+    auto floorTileSelector = [engine](Core::TileSystem* tileSystem, Maths::Vector2<int> loc){
+        return engine->RandomInteger(0, 3);
+    };
+
     tileSystem->RegisterBlockType(1, new Core::Block({
         {6, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(0,7) } )},
         {5, Core::BlockLayer(Core::TilePosition::Up, { Maths::Vector2<int>(0,6) })}
     }));
 
-    /*std::pair<int, Core::BlockLayer > floorLayer = {4, Core::BlockLayer(Core::TilePosition::Centre, {
+    std::pair<int, Core::BlockLayer > floorLayer = {8, Core::BlockLayer(Core::TilePosition::Centre, {
                            Maths::Vector2<int>(0,0), Maths::Vector2<int>(1,0), Maths::Vector2<int>(2,0), Maths::Vector2<int>(3,0)
-                       }, floorSelector)};*/
+                       }, floorTileSelector)};
 
     tileSystem->RegisterBlockType(2, new Core::Block({
-        {8, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(1,0) } ) },
+        /*{8, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(1,0) } ) },*/
+        floorLayer,
         {6, Core::BlockLayer(Core::TilePosition::Centre, {
             Maths::Vector2<int>(0,1), Maths::Vector2<int>(1,1), Maths::Vector2<int>(2,1), Maths::Vector2<int>(3,1), Maths::Vector2<int>(4,1), Maths::Vector2<int>(5,1), Maths::Vector2<int>(6,1), Maths::Vector2<int>(7,1), Maths::Vector2<int>(0,2), Maths::Vector2<int>(1,2), Maths::Vector2<int>(2,2), Maths::Vector2<int>(3,2)
         }, shadowSelector)}}));
@@ -63,8 +69,8 @@ void MainLevel::Loaded(Core::Engine *engine){
         }
     }*/
     tileSystem->Loaded(engine);
-    tileSystem->CreateTiles();
-    tileSystem->CommitTiles();
+    //tileSystem->CreateTiles();
+    //tileSystem->CommitTiles();
 
     Level::Loaded(engine);
 }

@@ -6,27 +6,27 @@ namespace Core {
 
     }
 
-    /*void Engine::SetSeed(int seed){
-        if (randomGenerators.find(seed) != randomGenerators.end()){
+    void Engine::SetSeed(int seed){
+        /*if (randomGenerators.find(seed) != randomGenerators.end()){
             generator = randomGenerators[seed];
         }else{
             generator = new std::default_random_engine();
             generator->seed(seed);
             randomGenerators[seed] = generator;
-        }
+        }*/
         currentSeed = seed;
-    }*/
+    }
 
-    /*int Engine::RandomInteger(int min, int max, [bool old = false]){
-        if (old == true && randomNumbers.containsKey(currentSeed)){
-            return randomNumbers[currentSeed];
-        }else{
-            int num = min + random.nextInt((max - min).floor());
-            randomNumbers[currentSeed] = num;
+    int Engine::RandomInteger(int min, int max){
+        std::random_device rd;
+        std::default_random_engine generator(rd());
+        //generator.seed(currentSeed);
 
-            return num;
-        }
-    }*/
+        std::uniform_int_distribution<int> distribution(min, max);
+
+        return distribution(generator);
+
+    }
 
     void Engine::setLoading(bool state){
         if (state == true){

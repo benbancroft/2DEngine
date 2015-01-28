@@ -7,6 +7,7 @@
 #include <iostream>
 #include <algorithm>
 #include <map>
+#include <random>
 
 #include "render.h"
 
@@ -25,8 +26,8 @@ namespace Core
     class Engine : public Render
     {
     private:
-        /*std::map<int, std::default_random_engine*> randomGenerators;
-        std::default_random_engine* generator;*/
+        std::map<int, std::default_random_engine*> randomGenerators;
+        std::default_random_engine* generator;
         int currentSeed;
         bool isLoaded = false;
         bool isLoading = false;
@@ -50,6 +51,7 @@ namespace Core
         virtual void Tick();
 
         void SetSeed(int seed);
+        int RandomInteger(int min, int max);
 
         virtual void OnTouchPress(double x, double y);
         virtual void OnTouchDrag(double x, double y);
