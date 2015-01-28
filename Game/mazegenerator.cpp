@@ -65,8 +65,8 @@ void MazeGenerator::Tick(Core::Engine* engine){
             /*int rx = engine->RandomInteger(0, ((tilesWidth/(corridoorWidth+1)-1)*(corridoorWidth+1)).toInt());
                int ry = engine->RandomInteger(1, ((tilesHeight/(corridoorWidth+1)-1)*(corridoorWidth+1)).toInt());*/
 
-            int rx = 1+engine->RandomInteger(0, (tilesWidth)/(corridoorWidth+1))*(corridoorWidth+1);
-            int ry = 1+engine->RandomInteger(0, (tilesHeight)/(corridoorWidth+1))*(corridoorWidth+1);
+            int rx = 1+engine->RandomInteger(0, (tilesWidth)/(corridoorWidth+1)-1)*(corridoorWidth+1);
+            int ry = 1+engine->RandomInteger(0, (tilesHeight)/(corridoorWidth+1)-1)*(corridoorWidth+1);
 
             int dir = engine->RandomInteger(0, 3);
 
@@ -125,8 +125,8 @@ void MazeGenerator::Tick(Core::Engine* engine){
 
                     int otherGroups = 0;
 
-                    for (int ix = 0; ix < tilesWidth/(corridoorWidth+1)-1; ix++) {
-                        for (int iy = 0; iy < tilesHeight/(corridoorWidth+1)-1; iy++) {
+                    for (int ix = 0; ix < (double)tilesWidth/(corridoorWidth+1)-1; ix++) {
+                        for (int iy = 0; iy < (double)tilesHeight/(corridoorWidth+1)-1; iy++) {
                             //if (ix > 0 && ix < width-1 && iy > 0 && iy < height-1){
                             if (groups[get2DIndex(ix, iy, groupWidth)] == oldGroup) {
                                 groups[get2DIndex(ix, iy, groupWidth)] = currentGroup;
