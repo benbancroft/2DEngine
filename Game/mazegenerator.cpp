@@ -72,7 +72,7 @@ void MazeGenerator::RegisterBlocks(Core::Engine* engine){
 
     tileSystem->RegisterBlockType(3, new Core::Block({floorLayer,
         {7, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(5,0) })}
-    }, true));
+    }, false));
 
     //register maze exit
 
@@ -395,7 +395,7 @@ void MazeGenerator::Tick(Core::Engine* engine){
                         tileSystem->CreateTiles();
                         tileSystem->CommitTiles();
 
-                        this->respawnPoint = Maths::Vector2<double>(tileSystem->tileSize*(corridoorWidth/2+1)-16, tileSystem->tileSize*(startHeight+corridoorWidth/2)-16);
+                        this->respawnPoint = Maths::Vector2<double>(tileSystem->tileSize*(corridoorWidth/2+1), tileSystem->tileSize*(startHeight+corridoorWidth/2)-16);
 
                         this->SetComplete();
 

@@ -2,9 +2,11 @@
 #define TILESYSTEM_H
 
 #include <functional>
+#include <math.h>
 
 #include "tilelayer.h"
 #include "tilegenerator.h"
+#include "platform/platform_log.h"
 
 namespace Core {
 
@@ -67,7 +69,7 @@ namespace Core {
             return this->level;
         }
 
-        bool ResolveCollision(Engine* engine, Entity* entity);
+        bool ResolveCollision(double currentX, double currentY, double* newX, double* newY, double aabbWidth, double aabbHeight, bool canSlide);
 
         Block* GetBlockById(int blockId);
 

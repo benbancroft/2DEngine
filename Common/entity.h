@@ -38,7 +38,7 @@ namespace Core
             DEBUG_LOG_WRITE_D("TST", "base");
         }
 
-        Entity(Engine* engine, Level* level) : DepthRenderable(7){
+        Entity(Engine* engine, Level* level) : DepthRenderable(1){
             //registerEntity(self, engine);
             this->level = level;
             addRenderable(level);
@@ -67,10 +67,10 @@ namespace Core
         double direction = 0.0;
         double speed = 0.0;
 
-        double width = 32.0;
-        double height = 32.0;
+        double width = 64.0;
+        double height = 64.0;
 
-        bool slides = false;
+        bool slides = true;
 
         std::string spriteSheet = "";
         int spriteIndex = 0;

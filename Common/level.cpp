@@ -24,7 +24,11 @@ namespace Core {
             entity->x += cos(entity->direction) * entity->speed;
             entity->y -= sin(entity->direction) * entity->speed;
 
-            if (this->tileSystem != NULL) this->tileSystem->ResolveCollision(engine, entity);
+            if (this->tileSystem != NULL) {
+                if(this->tileSystem->ResolveCollision(entity->lastX, entity->lastY,&(entity->x), &(entity->y),entity->width,entity->height,entity->slides)){
+                    entity->speed = 0;
+                }
+            }
 
             std::for_each(entity->viewportsFollowing.begin(), entity->viewportsFollowing.end(), [entity](Viewport* viewport){
                 viewport->FollowEntity(entity);
