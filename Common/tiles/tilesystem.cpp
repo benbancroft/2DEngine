@@ -29,245 +29,150 @@ void TileSystem::Loaded(Engine* engine){
     }
 }
 
-bool TileSystem::ResolveCollision(double currentX, double currentY, double *newX, double *newY, double aabbWidth, double aabbHeight, bool canSlide){
+int toBlockComponent(double comp, double tileSize, bool up = false){
+    if (up)
+        return (int)ceil(comp/tileSize);
+    else
+        return (int)floor(comp/tileSize);
+}
 
-    int obj_index = 0;
+bool scanForEdgeCollision(double collisionX, double collisionY, double aabbWidth, double aabbHeight, TileSystem* tileSystem, bool farSide, bool flipAxis = false){
+
+    if (flipAxis){
+        std::swap(collisionX, collisionY);
+        std::swap(aabbWidth, aabbHeight);
+    }
+    if (farSide){
+        collisionY += aabbHeight;
+    }
+
+    int yBlock = toBlockComponent(collisionY, tileSystem->tileSize);
+    int startX = toBlockComponent(collisionX, tileSystem->tileSize);
+    int endX = toBlockComponent((collisionX+aabbWidth), tileSystem->tileSize);
+    int dir = farSide ? 0 : 1;
+
+    for (int xBlock = startX; xBlock <= endX; xBlock++) {
+        int blockId = 0;
+        if (flipAxis){
+            blockId = tileSystem->GetBlock(Maths::Vector2<int>(yBlock-dir, xBlock));
+        }else{
+            blockId = tileSystem->GetBlock(Maths::Vector2<int>(xBlock, yBlock-dir));
+        }
+        if (blockId != 0 && tileSystem->GetBlockById(blockId)->isSolid) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool TileSystem::ResolveCollision(double currentX, double currentY, double *newX, double *newY, double aabbWidth, double aabbHeight, bool canSlide){
 
     double deltaY = *newY - currentY;
     double deltaX = *newX - currentX;
 
     double angle = atan2(deltaY, deltaX);
 
+    bool wasCollision = false;
+    bool isTouching = false;
+
     double xFactor = 1;
     double yFactor = 1;
 
-    double collisionX = *newX;
-    double collisionY = *newY;
-    double collisionOffset = 0;
-    int collisionSide = 0;
-    bool outsideGrid = false;
-    bool touchingWall = false;
+    double collisionX = currentX;
+    double collisionY = currentY;
 
-    int currentBlockX = floor(currentX/this->tileSize);
-    int currentBlockY = floor(currentY/this->tileSize);
-
-    int newBlockX = floor(collisionX/this->tileSize);
-    int newBlockY = floor(collisionY/this->tileSize);
-
-    //show_debug_message("DX: " + string(deltaX) + " DY: " + string(deltaY));
-
-    int dir = 0;
+    int xDir = 0;
 
     if (deltaY == 0 || deltaX == 0) {
         yFactor = 0;
         xFactor = 0;
-        //show_debug_message("no yFactor");
     }else{
         yFactor = tan(angle);
         if (yFactor != 0)
             xFactor =  1 / tan(angle);
         else
             xFactor = 0;
-        //show_debug_message("yfactor");
     }
     yFactor=deltaY;
     xFactor=deltaX;
-    //wrong!
-    if (/*angle > -(1/2) * Maths::PI && angle < (1/2) * Maths::PI*/deltaX > 0) {
-        dir = 1;
-        currentBlockX = floor((currentX+aabbWidth)/this->tileSize);
-        //currentBlockY = floor((currentY)/this->tileSize);
 
-        newBlockX = floor((collisionX+aabbWidth)/this->tileSize);
-        //newBlockY = floor((collisionY)/this->tileSize);
-    }else if(/*angle < -(1/2) * Maths::PI || angle > (1/2) * Maths::PI*/ deltaX < 0) {
-        dir = -1;
+    if (deltaX > 0) {
+        xDir = 1;
+    }else if(deltaX < 0) {
+        xDir = -1;
     }else{
-        dir = 0;
-    }
-
-    double xXColPos = 0;
-    double xYColPos = 0;
-    double yXColPos = 0;
-    double yYColPos = 0;
-
-    bool wasCollision = false;
-
-    //int sCornerX = floor(aabbWidth/this->tileSize);
-
-    //fix!
-    if (dir != 0) {
-        for (int d = 0; d <= ceil(abs(newBlockX-currentBlockX)); d++) {
-            bool breakLoop = false;
-
-            int checkBlockX = currentBlockX+dir*d;
-            int sCornerY = floor((fmod(currentY+((checkBlockX*this->tileSize)-currentX)*yFactor,this->tileSize)+aabbHeight)/this->tileSize);
-
-            for (int i = 0; i <= sCornerY; i++) {
-
-                int checkBlockY = 0;
-                //if (dir == 1) {
-                    //checkBlockX = currentBlockX+d;
-                    //checkBlockY = floor((currentY+(i*this->tileSize)*yFactor)/this->tileSize)+i;
-
-                //}else{
-                    //checkBlockX = currentBlockX-d;
-                    checkBlockY = floor(currentY/this->tileSize+d*yFactor)+i;
-                //}
-                int blockId = this->GetBlock(Maths::Vector2<int>(checkBlockX, checkBlockY));
-                if (blockId != 0 && this->GetBlockById(blockId)->isSolid) {
-                    auto test = currentY/this->tileSize+d*yFactor+i;
-                    //if (i == 0  && test == checkBlockY){
-                        //if (i == 0) {
-                            //DEBUG_LOG_WRITE_D("TAG", "Touch");
-                        //}
-                    //}else{
-                        xXColPos = (checkBlockX-dir)*this->tileSize;
-                        if (dir == 1) xXColPos += this->tileSize-aabbWidth;
-                        xYColPos = (currentY+dir*(xXColPos-currentX)*yFactor);
-                        //if (dir == 1) collisionX -= aabbWidth;
-
-                        //collisionY = (checkBlockY-dir)*this->tileSize;
-
-                        //collisionX = (currentX+(collisionY-currentY)*xFactor);
-
-                        wasCollision = true;
-
-                        breakLoop = true;
-                        break;
-                   //}
-                }
-            }
-            if (breakLoop) {
-                break;
-            }
-        }
+        xDir = 0;
     }
 
     int yDir = 0;
     if (deltaY > 0) {
         yDir = 1;
-        //currentBlockX = floor((currentX)/this->tileSize);
-        currentBlockY = floor((currentY+aabbHeight)/this->tileSize);
-
-        //newBlockX = floor((collisionX)/this->tileSize);
-        newBlockY = floor((collisionY+aabbHeight)/this->tileSize);
     }else if (deltaY < 0) {
         yDir = -1;
     }else{
         yDir = 0;
     }
 
-    //dir, currentY, currentBlockY, newBlockY
+    while (xDir != 0 && yDir != 0) {
+        double xDist = 0;
+        double yDist = 0;
 
-    if (true == false && yDir != 0) {
-        for (int d = 0; d <= ceil(abs(newBlockY-currentBlockY)); d++) {
-            bool breakLoop = false;
-
-            int checkBlockY = currentBlockY+yDir*d;
-            int sCornerX = floor((fmod(currentX+((checkBlockY*this->tileSize)-currentY)*xFactor,this->tileSize)+aabbWidth)/this->tileSize);
-
-            for (int i = 0; i <= sCornerX; i++) {
-
-                int checkBlockX = 0;
-                /*if (yDir == 1) {
-                    checkBlockX = floor((currentX+(d*this->tileSize)*xFactor)/this->tileSize)+i;
-
-                }else{
-                    checkBlockX = floor((currentX+(-d*this->tileSize)*xFactor)/this->tileSize)+i;
-                }*/
-                checkBlockX = floor(currentX/this->tileSize+d*xFactor)+i;
-
-                int blockId = this->GetBlock(Maths::Vector2<int>(checkBlockX, checkBlockY));
-                //tile_is_wall(checkBlockX, checkBlockY, obj_index) || get_block_at(checkBlockX, checkBlockY) == noone
-                if (blockId != 0 && this->GetBlockById(blockId)->isSolid) {
-
-                    /*if ((currentY+d*yFactor)/this->tileSize+i == checkBlockY){
-                        DEBUG_LOG_WRITE_D("TAG", "Touch");
-                    }else{*/
-
-                        yYColPos = (checkBlockY-yDir)*this->tileSize;
-                        if (yDir == 1) yYColPos += this->tileSize-aabbHeight;
-
-                        yXColPos = (currentX+(yYColPos-currentY)*xFactor);
-
-                        //collisionY = (currentY+(collisionX-currentX)*yFactor);
-
-                        wasCollision = true;
-
-                        breakLoop = true;
-                    //}
-
-                }
-            }
-            if (breakLoop) {
-                break;
-            }
-        }
-    }
-
-    /*if (xXColPos != 0 || yXColPos != 0){
-        double slideX = currentX;
-        double slideY = currentY;
-        if (xXColPos != false && xYColPos != false && Maths::distanceBetweenPoints(Maths::Vector2<double>(xXColPos, xYColPos), Maths::Vector2<double>(currentX, currentY)) < Maths::distanceBetweenPoints(Maths::Vector2<double>(yXColPos, yYColPos), Maths::Vector2<double>(currentX, currentY))){
-            collisionX = xXColPos;
-            collisionY = xYColPos;
-            //show_debug_message("Use X" + string(collisionX));
-            if (dir == -1){
-                //show_debug_message("Side: LEFT");
-                collisionSide = 0;
-            }else if (dir == 1){
-                //show_debug_message("Side: RIGHT");
-                collisionSide = 1;
-            }
-
-            if (canSlide == true){
-                    slideX = collisionX;
-                    slideY = *newY;
-            }
+        if (yDir < 0) {
+            yDist = std::fabs(collisionY - (double)(toBlockComponent(collisionY, this->tileSize)*this->tileSize));
         }else{
-            collisionX = yXColPos;
-            collisionY = yYColPos;
-            //show_debug_message("Use Y" + string(collisionY));
-            if (yDir == -1)
-                //show_debug_message("Side: UP");
-                collisionSide = 2;
-            else if (yDir == 1){
-                //show_debug_message("Side: DOWN");
-                collisionSide = 3;
-            }
-
-            if (canSlide == true){
-                slideX = *newX;
-                slideY = collisionY;
-            }
-
+            yDist = std::fabs(collisionY+aabbHeight - (toBlockComponent(collisionY+aabbHeight, this->tileSize, true)*this->tileSize));
         }
-        collisionOffset = Maths::distanceBetweenPoints(Maths::Vector2<double>(collisionX, collisionY), Maths::Vector2<double>(*newX, *newY));
-        touchingWall = true;
-        if (canSlide == true){
-            bool slideResult = this->ResolveCollision(collisionX, collisionY, &slideX, &slideY, aabbWidth, aabbHeight, false);
-            collisionOffset = 0;
-        }
-       }*/
 
-    if (outsideGrid == true) {
-        collisionOffset = 0;
+        //Check for touching on X side that we are traveling in.
+        if (yDist == 0){
+            isTouching = scanForEdgeCollision(collisionX, collisionY, aabbWidth, aabbHeight, this, yDir > 0, false);
+        }
+
+        if (xDir < 0) {
+            xDist = std::fabs(collisionX - (toBlockComponent(collisionX, this->tileSize)*this->tileSize));
+        }else{
+            xDist = std::fabs(collisionX+aabbWidth - (toBlockComponent(collisionX+aabbWidth, this->tileSize, true)*this->tileSize));
+        }
+
+        //Check for touching on Y side that we are traveling in.
+        if (isTouching == false && xDist == 0){
+            isTouching = scanForEdgeCollision(collisionX, collisionY,aabbWidth, aabbHeight, this, xDir > 0, true);
+        }
+
+        if (!isTouching && ((yDist <= xDist  && yDist != 0) || (xDist == 0)) && yDist < std::fabs(collisionY - *newY)) {
+            double tXdist = (yDist*yDir)/yFactor*xFactor;
+
+            wasCollision = scanForEdgeCollision(collisionX+tXdist, collisionY+yDist*yDir,aabbWidth, aabbHeight, this, yDir > 0, false);
+
+            collisionY += yDist*yDir;
+            collisionX += tXdist;
+        }else if (!isTouching && xDist != 0 && xDist < yDist && xDist < std::fabs(collisionX - *newX)) {
+            double tYdist = (xDist*xDir)/xFactor*yFactor;
+
+            wasCollision = scanForEdgeCollision(collisionX+xDist*xDir, collisionY+tYdist,aabbWidth, aabbHeight, this, xDir > 0, true);
+
+            collisionX += xDist*xDir;
+            collisionY += tYdist;
+        }else{
+            if (isTouching){
+                //Do nothing
+            }else{
+                wasCollision = false;
+                collisionX = *newX;
+                collisionY = *newY;
+            }
+            break;
+        }
+
+        if (wasCollision) {
+            break;
+        }
     }
 
-    if (wasCollision){
+    if (wasCollision || isTouching) {
         *newX = collisionX;
         *newY = collisionY;
     }
-
-    /*returnData[0] = collisionX;
-       returnData[1] = collisionY;
-       returnData[2] = collisionOffset;
-       returnData[3] = collisionSide;
-       returnData[4] = outsideGrid;
-       returnData[5] = touchingWall;
-
-       return returnData;      */
     return wasCollision;
 
 }

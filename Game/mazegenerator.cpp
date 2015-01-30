@@ -72,7 +72,7 @@ void MazeGenerator::RegisterBlocks(Core::Engine* engine){
 
     tileSystem->RegisterBlockType(3, new Core::Block({floorLayer,
         {7, Core::BlockLayer(Core::TilePosition::Centre, { Maths::Vector2<int>(5,0) })}
-    }, false));
+    }, true));
 
     //register maze exit
 
@@ -95,7 +95,7 @@ void MazeGenerator::RegisterBlocks(Core::Engine* engine){
         })},
         {4, Core::BlockLayer(Core::TilePosition::Up, {
             Maths::Vector2<int>(3,6)
-        })}}, true));
+        })}}, false));
 }
 
 void MazeGenerator::PopulateMaze(Core::TileSystem* tileSystem, Core::Engine* engine, bool spawnTraps, int currentLevel){

@@ -2,7 +2,7 @@
 #define TILESYSTEM_H
 
 #include <functional>
-#include <math.h>
+#include <cmath>
 
 #include "tilelayer.h"
 #include "tilegenerator.h"
