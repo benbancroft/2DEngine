@@ -38,7 +38,7 @@ namespace Core
             DEBUG_LOG_WRITE_D("TST", "base");
         }
 
-        Entity(Engine* engine, Level* level) : DepthRenderable(1){
+        Entity(Engine* engine, Level* level) : DepthRenderable(6){
             //registerEntity(self, engine);
             this->level = level;
             addRenderable(level);

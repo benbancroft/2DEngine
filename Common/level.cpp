@@ -25,7 +25,7 @@ namespace Core {
             entity->y -= sin(entity->direction) * entity->speed;
 
             if (this->tileSystem != NULL) {
-                if(this->tileSystem->ResolveCollision(entity->lastX, entity->lastY,&(entity->x), &(entity->y),entity->width,entity->height,entity->slides)){
+                if(this->tileSystem->ResolveCollision(entity->lastX, entity->lastY,&(entity->x), &(entity->y),entity->width,entity->height,entity->slides) != CollisionSide::None){
                     entity->speed = 0;
                 }
             }

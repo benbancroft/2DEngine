@@ -12,6 +12,8 @@ namespace Core {
 
     //enum TilePosition { Centre, Up, Down, Left, Right, DownLeft, DownRight, UpLeft, UpRight };
 
+    enum CollisionSide { None, Top, Bottom, Left, Right };
+
     namespace TilePosition {
 
         static const Maths::Vector2<int> Centre(0,0);
@@ -69,7 +71,7 @@ namespace Core {
             return this->level;
         }
 
-        bool ResolveCollision(double currentX, double currentY, double* newX, double* newY, double aabbWidth, double aabbHeight, bool canSlide);
+        CollisionSide ResolveCollision(double currentX, double currentY, double* newX, double* newY, double aabbWidth, double aabbHeight, bool canSlide);
 
         Block* GetBlockById(int blockId);
 

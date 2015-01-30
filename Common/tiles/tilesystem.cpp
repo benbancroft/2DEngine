@@ -65,14 +65,14 @@ bool scanForEdgeCollision(double collisionX, double collisionY, double aabbWidth
     return false;
 }
 
-bool TileSystem::ResolveCollision(double currentX, double currentY, double *newX, double *newY, double aabbWidth, double aabbHeight, bool canSlide){
+CollisionSide TileSystem::ResolveCollision(double currentX, double currentY, double *newX, double *newY, double aabbWidth, double aabbHeight, bool canSlide){
 
     double deltaY = *newY - currentY;
     double deltaX = *newX - currentX;
 
     double angle = atan2(deltaY, deltaX);
 
-    bool wasCollision = false;
+    CollisionSide collisionState = CollisionSide::None;
     bool isTouching = false;
 
     double xFactor = 1;
@@ -123,9 +123,10 @@ bool TileSystem::ResolveCollision(double currentX, double currentY, double *newX
             yDist = std::fabs(collisionY+aabbHeight - (toBlockComponent(collisionY+aabbHeight, this->tileSize, true)*this->tileSize));
         }
 
-        //Check for touching on X side that we are traveling in.
+        //Check for touching on Y side that we are traveling in.
         if (yDist == 0){
             isTouching = scanForEdgeCollision(collisionX, collisionY, aabbWidth, aabbHeight, this, yDir > 0, false);
+            collisionState = yDir > 0 ? CollisionSide::Bottom : CollisionSide::Top;
         }
 
         if (xDir < 0) {
@@ -137,19 +138,28 @@ bool TileSystem::ResolveCollision(double currentX, double currentY, double *newX
         //Check for touching on Y side that we are traveling in.
         if (isTouching == false && xDist == 0){
             isTouching = scanForEdgeCollision(collisionX, collisionY,aabbWidth, aabbHeight, this, xDir > 0, true);
+            collisionState = xDir > 0 ? CollisionSide::Right : CollisionSide::Left;
         }
 
         if (!isTouching && ((yDist <= xDist  && yDist != 0) || (xDist == 0)) && yDist < std::fabs(collisionY - *newY)) {
             double tXdist = (yDist*yDir)/yFactor*xFactor;
 
-            wasCollision = scanForEdgeCollision(collisionX+tXdist, collisionY+yDist*yDir,aabbWidth, aabbHeight, this, yDir > 0, false);
+            bool wasCollision = scanForEdgeCollision(collisionX+tXdist, collisionY+yDist*yDir,aabbWidth, aabbHeight, this, yDir > 0, false);
+
+            if (wasCollision){
+                collisionState = yDir > 0 ? CollisionSide::Bottom : CollisionSide::Top;
+            }
 
             collisionY += yDist*yDir;
             collisionX += tXdist;
         }else if (!isTouching && xDist != 0 && xDist < yDist && xDist < std::fabs(collisionX - *newX)) {
             double tYdist = (xDist*xDir)/xFactor*yFactor;
 
-            wasCollision = scanForEdgeCollision(collisionX+xDist*xDir, collisionY+tYdist,aabbWidth, aabbHeight, this, xDir > 0, true);
+            bool wasCollision = scanForEdgeCollision(collisionX+xDist*xDir, collisionY+tYdist,aabbWidth, aabbHeight, this, xDir > 0, true);
+
+            if (wasCollision){
+                collisionState = xDir > 0 ? CollisionSide::Right : CollisionSide::Left;
+            }
 
             collisionX += xDist*xDir;
             collisionY += tYdist;
@@ -157,23 +167,44 @@ bool TileSystem::ResolveCollision(double currentX, double currentY, double *newX
             if (isTouching){
                 //Do nothing
             }else{
-                wasCollision = false;
+                collisionState = CollisionSide::None;
                 collisionX = *newX;
                 collisionY = *newY;
             }
             break;
         }
 
-        if (wasCollision) {
+        if (collisionState != CollisionSide::None) {
             break;
         }
     }
 
-    if (wasCollision || isTouching) {
+    if (collisionState != CollisionSide::None || isTouching) {
+
+        if (canSlide){
+            double slideX = collisionX;
+            double slideY = collisionY;
+            switch(collisionState){
+            case Top:
+            case Bottom:
+                slideX = *newX;
+                break;
+            case Left:
+            case Right:
+                slideY = *newY;
+                break;
+            }
+            ResolveCollision(collisionX, collisionY, &slideX, &slideY, aabbWidth, aabbHeight, false);
+
+            collisionX = slideX;
+            collisionY = slideY;
+
+        }
+
         *newX = collisionX;
         *newY = collisionY;
     }
-    return wasCollision;
+    return collisionState;
 
 }
 
